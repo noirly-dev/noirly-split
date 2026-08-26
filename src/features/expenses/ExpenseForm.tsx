@@ -16,6 +16,7 @@ import {
   parseMajorToMinor,
   todayISODate,
 } from "@/src/components/MoneyText";
+import { Button } from "@/src/components/ui/Button";
 import { api, type CreateExpenseBody } from "@/src/lib/api-client";
 import { ExpensePresence } from "@/src/features/realtime/ExpensePresence";
 
@@ -360,7 +361,10 @@ export function ExpenseForm({
     memberList.find((m) => m.userId === userId)?.displayName ?? "Member";
 
   return (
-    <form className="mx-auto flex w-full max-w-xl flex-col gap-6" onSubmit={onSubmit}>
+    <form
+      className="flex w-full flex-col gap-5 border border-dashed border-hairline bg-surface p-5"
+      onSubmit={onSubmit}
+    >
       <ExpensePresence groupId={groupId} />
 
       <label className="flex flex-col gap-2">
@@ -677,17 +681,17 @@ export function ExpenseForm({
         </p>
       ) : null}
 
-      <button
+      <Button
         type="submit"
+        className="w-full"
         disabled={mutation.isPending || !splitValid || !payersValid}
-        className="h-12 bg-panel font-mono text-[11px] font-semibold tracking-[0.16em] text-panel-ink uppercase disabled:opacity-50"
       >
         {mutation.isPending
           ? "Saving…"
           : editing
             ? "Save changes"
             : "Add expense"}
-      </button>
+      </Button>
     </form>
   );
 }

@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { PageHeader } from "@/src/components/PageHeader";
 import { MoneyText } from "@/src/components/MoneyText";
 import { SettleUpDialog } from "@/src/features/settle-up/SettleUpDialog";
 import { qk } from "@/src/core/sync/query-keys";
@@ -32,68 +33,65 @@ export default function BalancesPage() {
 
   if (balances.isLoading) {
     return (
-      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
-        Loading…
-      </p>
+      <main className="mx-auto w-full max-w-3xl px-6 py-8">
+        <p className="text-sm text-muted">Loading balances…</p>
+      </main>
     );
   }
 
   if (balances.error || !balances.data) {
     return (
-      <p className="text-balance-negative" role="alert">
-        {(balances.error as Error)?.message ?? "Failed to load"}
-      </p>
+      <main className="mx-auto w-full max-w-3xl px-6 py-8">
+        <p className="text-sm text-balance-negative" role="alert">
+          {(balances.error as Error)?.message ?? "Failed to load"}
+        </p>
+      </main>
     );
   }
 
   const data = balances.data;
   const yourNet = data.yourNet;
-  const yourClass =
-    yourNet > 0
-      ? "text-balance-positive"
-      : yourNet < 0
-        ? "text-balance-negative"
-        : "text-balance-zero";
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-10">
-      <div>
-        <h2 className="font-display text-3xl font-bold tracking-[-0.04em] uppercase">
-          Balances
-        </h2>
-        <p className="mt-2 text-muted">
-          Simplified settlements for {data.baseCurrency}.
+    <main className="mx-auto w-full max-w-3xl px-6 py-8">
+      <PageHeader
+        kicker="Balances"
+        title="Who owes whom"
+        lead={`Simplified settlements in ${data.baseCurrency}.`}
+      />
+
+      <div className="mt-8 border border-dashed border-hairline bg-panel p-5 text-panel-ink">
+        <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-panel-ink/55">
+          Your position
         </p>
-        <p className={`mt-4 text-lg ${yourClass}`}>
+        <p className="mt-3 font-display text-2xl font-bold tracking-[-0.03em] uppercase">
           {yourNet > 0
-            ? "You are owed "
+            ? "You are owed"
             : yourNet < 0
-              ? "You owe "
-              : "You are settled "}
-          <MoneyText
-            amount={Math.abs(yourNet)}
-            currency={data.baseCurrency}
-            className="text-xl font-bold"
-          />
+              ? "You owe"
+              : "You are settled"}
         </p>
+        <MoneyText
+          amount={Math.abs(yourNet)}
+          currency={data.baseCurrency}
+          className="mt-2 block text-3xl font-bold"
+        />
       </div>
 
-      <section>
-        <h3 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
-          Who owes whom
-        </h3>
+      <section className="mt-10">
+        <h2 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
+          Simplified debts
+        </h2>
         {data.simplified.length === 0 ? (
-          <p className="mt-4 border border-dashed border-hairline px-5 py-8 text-muted">
-            Everyone is settled.
-          </p>
+          <p className="mt-4 text-sm text-muted">Everyone is settled.</p>
         ) : (
           <ul className="mt-4 divide-y divide-dashed divide-hairline border border-dashed border-hairline">
             {data.simplified.map((debt) => (
               <li
                 key={`${debt.fromUserId}-${debt.toUserId}`}
-                className="flex flex-wrap items-center justify-between gap-3 px-5 py-4"
+                className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
               >
-                <p>
+                <p className="text-sm">
                   <span className="font-medium">{debt.fromDisplayName}</span>
                   <span className="text-muted"> owes </span>
                   <span className="font-medium">{debt.toDisplayName}</span>
@@ -102,7 +100,7 @@ export default function BalancesPage() {
                   <MoneyText
                     amount={debt.amountInBase}
                     currency={data.baseCurrency}
-                    className="text-base font-semibold"
+                    className="text-sm font-semibold"
                   />
                   <button
                     type="button"
@@ -118,10 +116,10 @@ export default function BalancesPage() {
         )}
       </section>
 
-      <section>
-        <h3 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
+      <section className="mt-10">
+        <h2 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
           Net by member
-        </h3>
+        </h2>
         <ul className="mt-4 divide-y divide-dashed divide-hairline border border-dashed border-hairline">
           {data.nets.map((net) => {
             const isYou = me.data?.user.id === net.userId;
@@ -134,17 +132,21 @@ export default function BalancesPage() {
             return (
               <li
                 key={net.userId}
-                className="flex items-center justify-between px-5 py-4"
+                className="flex items-center justify-between px-4 py-3"
               >
-                <span>
+                <span className="text-sm">
                   {net.displayName}
-                  {isYou ? " (you)" : ""}
+                  {isYou ? (
+                    <span className="ml-2 font-mono text-[10px] uppercase text-muted">
+                      you
+                    </span>
+                  ) : null}
                 </span>
                 <MoneyText
                   amount={net.netInBase}
                   currency={data.baseCurrency}
                   signed
-                  className={color}
+                  className={`text-sm ${color}`}
                 />
               </li>
             );
@@ -164,6 +166,6 @@ export default function BalancesPage() {
           onClose={() => setSettle(null)}
         />
       ) : null}
-    </div>
+    </main>
   );
 }

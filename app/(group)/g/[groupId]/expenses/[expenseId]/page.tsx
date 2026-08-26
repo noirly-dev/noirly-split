@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { PageHeader } from "@/src/components/PageHeader";
+import { Button } from "@/src/components/ui/Button";
 import { MoneyText } from "@/src/components/MoneyText";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -48,17 +50,19 @@ export default function ExpenseDetailPage() {
 
   if (expense.isLoading) {
     return (
-      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
-        Loading…
-      </p>
+      <main className="mx-auto w-full max-w-3xl px-6 py-8">
+        <p className="text-sm text-muted">Loading…</p>
+      </main>
     );
   }
 
   if (expense.error || !expense.data) {
     return (
-      <p className="text-balance-negative" role="alert">
-        {(expense.error as Error)?.message ?? "Not found"}
-      </p>
+      <main className="mx-auto w-full max-w-3xl px-6 py-8">
+        <p className="text-sm text-balance-negative" role="alert">
+          {(expense.error as Error)?.message ?? "Not found"}
+        </p>
+      </main>
     );
   }
 
@@ -67,99 +71,95 @@ export default function ExpenseDetailPage() {
   const canEdit = me.data?.user.id === e.createdBy;
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-6">
+    <main className="mx-auto w-full max-w-3xl px-6 py-8">
       <Link
         href={`/g/${groupId}`}
-        className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted"
+        className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted hover:text-ink"
       >
         ← Expenses
       </Link>
-      <div>
-        <h2 className="font-display text-3xl font-bold tracking-[-0.04em] uppercase">
-          {e.description}
-        </h2>
-        <p className="mt-2 font-mono text-[11px] tracking-[0.12em] uppercase text-muted">
-          {e.date}
-          {e.category ? ` · ${e.category}` : ""} · {e.splitMethod} split
-        </p>
-      </div>
 
-      <MoneyText
-        amount={e.amount}
-        currency={e.currency}
-        className="text-3xl font-bold"
+      <PageHeader
+        kicker="Expense"
+        title={e.description}
+        lead={`${e.date}${e.category ? ` · ${e.category}` : ""} · ${e.splitMethod} split`}
+        className="mt-4"
+        action={
+          canEdit ? (
+            <>
+              <Link href={`/g/${groupId}/expenses/${expenseId}/edit`}>
+                <Button variant="ghost">Edit</Button>
+              </Link>
+              <Button
+                variant="danger"
+                disabled={del.isPending}
+                onClick={() => {
+                  if (window.confirm("Delete this expense?")) del.mutate();
+                }}
+              >
+                {del.isPending ? "Deleting…" : "Delete"}
+              </Button>
+            </>
+          ) : null
+        }
       />
 
-      {e.currency !== baseCurrency || e.fxRateToBase !== 1 ? (
-        <p className="text-sm text-muted">
-          ≈ <MoneyText amount={e.amountInBase} currency={baseCurrency} />
-          {e.fxRateToBase !== 1 ? ` at rate ${e.fxRateToBase}` : ""}
-        </p>
-      ) : null}
+      <div className="mt-8 border border-dashed border-hairline bg-surface p-5">
+        <MoneyText
+          amount={e.amount}
+          currency={e.currency}
+          className="text-3xl font-bold"
+        />
+        {e.currency !== baseCurrency || e.fxRateToBase !== 1 ? (
+          <p className="mt-2 text-sm text-muted">
+            ≈ <MoneyText amount={e.amountInBase} currency={baseCurrency} />
+            {e.fxRateToBase !== 1 ? ` at rate ${e.fxRateToBase}` : ""}
+          </p>
+        ) : null}
+      </div>
 
       {e.receiptUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={e.receiptUrl}
           alt="Receipt"
-          className="max-h-56 border border-dashed border-hairline object-contain"
+          className="mt-6 max-h-56 border border-dashed border-hairline object-contain"
         />
       ) : null}
 
-      <div>
-        <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+      <section className="mt-8">
+        <h2 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
           Paid by
-        </p>
-        <ul className="mt-2 space-y-1">
+        </h2>
+        <ul className="mt-3 divide-y divide-dashed divide-hairline border border-dashed border-hairline">
           {e.payers.map((p) => (
-            <li key={p.userId} className="flex justify-between">
+            <li key={p.userId} className="flex justify-between px-4 py-3 text-sm">
               <span>{nameOf(p.userId)}</span>
               <MoneyText amount={p.amountPaid} currency={e.currency} />
             </li>
           ))}
         </ul>
-      </div>
+      </section>
 
-      <div>
-        <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+      <section className="mt-8">
+        <h2 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
           Split
-        </p>
-        <ul className="mt-2 space-y-1">
+        </h2>
+        <ul className="mt-3 divide-y divide-dashed divide-hairline border border-dashed border-hairline">
           {e.splits.map((s) => (
-            <li key={s.userId} className="flex justify-between">
+            <li key={s.userId} className="flex justify-between px-4 py-3 text-sm">
               <span>{nameOf(s.userId)}</span>
               <MoneyText amount={s.amountOwed} currency={e.currency} />
             </li>
           ))}
         </ul>
-      </div>
-
-      {canEdit ? (
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href={`/g/${groupId}/expenses/${expenseId}/edit`}
-            className="inline-flex h-11 items-center bg-panel px-5 font-mono text-[11px] font-semibold tracking-[0.16em] text-panel-ink uppercase"
-          >
-            Edit
-          </Link>
-          <button
-            type="button"
-            className="h-11 border border-dashed border-hairline px-5 font-mono text-[11px] tracking-[0.14em] uppercase text-balance-negative disabled:opacity-50"
-            disabled={del.isPending}
-            onClick={() => {
-              if (window.confirm("Delete this expense?")) del.mutate();
-            }}
-          >
-            {del.isPending ? "Deleting…" : "Delete"}
-          </button>
-        </div>
-      ) : null}
+      </section>
 
       {del.error ? (
-        <p className="text-balance-negative" role="alert">
+        <p className="mt-4 text-sm text-balance-negative" role="alert">
           {(del.error as Error).message}
         </p>
       ) : null}
-    </div>
+    </main>
   );
 }

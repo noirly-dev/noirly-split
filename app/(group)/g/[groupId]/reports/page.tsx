@@ -2,7 +2,9 @@
 
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import { PageHeader } from "@/src/components/PageHeader";
 import { MoneyText } from "@/src/components/MoneyText";
+import { DotMatrixNumeral } from "@/src/components/DotMatrix";
 import { api } from "@/src/lib/api-client";
 
 export default function ReportsPage() {
@@ -15,57 +17,78 @@ export default function ReportsPage() {
 
   if (report.isLoading) {
     return (
-      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
-        Loading…
-      </p>
+      <main className="mx-auto w-full max-w-3xl px-6 py-8">
+        <p className="text-sm text-muted">Loading…</p>
+      </main>
     );
   }
 
   if (report.error || !report.data) {
     return (
-      <p className="text-balance-negative" role="alert">
-        {(report.error as Error)?.message ?? "Failed"}
-      </p>
+      <main className="mx-auto w-full max-w-3xl px-6 py-8">
+        <p className="text-sm text-balance-negative" role="alert">
+          {(report.error as Error)?.message ?? "Failed"}
+        </p>
+      </main>
     );
   }
 
   const data = report.data;
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8">
-      <div>
-        <h2 className="font-display text-3xl font-bold tracking-[-0.04em] uppercase">
-          Reports
-        </h2>
-        <p className="mt-2 text-muted">
-          {data.expenseCount} expenses ·{" "}
-          <MoneyText amount={data.totalInBase} currency={data.baseCurrency} />{" "}
-          total
-        </p>
+    <main className="mx-auto w-full max-w-3xl px-6 py-8">
+      <PageHeader
+        kicker="Reports"
+        title="Spend"
+        lead={`${data.expenseCount} expenses in ${data.baseCurrency}.`}
+      />
+
+      <div className="mt-8 grid gap-3 sm:grid-cols-2">
+        <div className="border border-dashed border-hairline bg-surface p-5">
+          <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
+            Expenses
+          </p>
+          <DotMatrixNumeral className="mt-3 text-3xl">
+            {String(data.expenseCount).padStart(2, "0")}
+          </DotMatrixNumeral>
+        </div>
+        <div className="border border-dashed border-hairline bg-panel p-5 text-panel-ink">
+          <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-panel-ink/55">
+            Total
+          </p>
+          <MoneyText
+            amount={data.totalInBase}
+            currency={data.baseCurrency}
+            className="mt-3 block text-2xl font-bold"
+          />
+        </div>
       </div>
 
-      <section>
-        <h3 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
+      <section className="mt-10">
+        <h2 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
           By category
-        </h3>
+        </h2>
         <ul className="mt-4 divide-y divide-dashed divide-hairline border border-dashed border-hairline">
           {data.byCategory.map((row) => (
             <li
               key={row.category}
-              className="flex items-center justify-between px-5 py-4"
+              className="flex items-center justify-between px-4 py-3"
             >
-              <span className="capitalize">{row.category}</span>
+              <span className="text-sm capitalize">{row.category}</span>
               <MoneyText
                 amount={row.amountInBase}
                 currency={data.baseCurrency}
+                className="text-sm font-semibold"
               />
             </li>
           ))}
           {data.byCategory.length === 0 ? (
-            <li className="px-5 py-8 text-muted">No categorized spend yet.</li>
+            <li className="px-4 py-8 text-sm text-muted">
+              No categorized spend yet.
+            </li>
           ) : null}
         </ul>
       </section>
-    </div>
+    </main>
   );
 }

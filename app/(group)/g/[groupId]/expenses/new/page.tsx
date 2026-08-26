@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import { PageHeader } from "@/src/components/PageHeader";
 import { ExpenseForm } from "@/src/features/expenses/ExpenseForm";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -21,20 +22,19 @@ export default function NewExpensePage() {
 
   if (!group.data || !me.data) {
     return (
-      <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
-        Loading…
-      </p>
+      <main className="mx-auto w-full max-w-lg px-6 py-8">
+        <p className="text-sm text-muted">Loading…</p>
+      </main>
     );
   }
 
   return (
-    <div className="mx-auto w-full max-w-xl">
-      <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted">
-        Expenses
-      </p>
-      <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.04em] uppercase">
-        Add expense
-      </h2>
+    <main className="mx-auto w-full max-w-lg px-6 py-8">
+      <PageHeader
+        kicker="Expense"
+        title="Add expense"
+        lead={`Base currency ${group.data.group.baseCurrency}.`}
+      />
       <div className="mt-8">
         <ExpenseForm
           groupId={groupId}
@@ -42,6 +42,6 @@ export default function NewExpensePage() {
           currentUserId={me.data.user.id}
         />
       </div>
-    </div>
+    </main>
   );
 }

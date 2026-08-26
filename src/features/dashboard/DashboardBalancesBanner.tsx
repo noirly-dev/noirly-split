@@ -15,7 +15,7 @@ export function DashboardBalancesBanner() {
 
   if (data.mixed) {
     return (
-      <div className="border border-dashed border-hairline px-5 py-4">
+      <div className="border border-dashed border-hairline bg-surface px-5 py-4">
         <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
           Across groups
         </p>
@@ -47,8 +47,8 @@ export function DashboardBalancesBanner() {
   if (!data.currency) return null;
 
   return (
-    <div className="border border-dashed border-hairline px-5 py-4">
-      <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+    <div className="border border-dashed border-hairline bg-panel px-5 py-4 text-panel-ink">
+      <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-panel-ink/55">
         Across groups
       </p>
       <p className="mt-2 flex flex-wrap gap-6 text-lg">

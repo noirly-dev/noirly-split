@@ -3,6 +3,8 @@
 import { useParams, useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { PageHeader } from "@/src/components/PageHeader";
+import { Button } from "@/src/components/ui/Button";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
 
@@ -61,38 +63,36 @@ export default function MembersPage() {
   const isCreator = me.data?.user.id === group.data?.group.createdBy;
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8">
-      <div>
-        <h2 className="font-display text-3xl font-bold tracking-[-0.04em] uppercase">
-          Members
-        </h2>
-        <p className="mt-2 text-muted">
-          Anyone with the invite link can join. No roles — flat membership.
-        </p>
-      </div>
+    <main className="mx-auto w-full max-w-3xl px-6 py-8">
+      <PageHeader
+        kicker="Members"
+        title="People"
+        lead="Anyone with the invite link can join. Flat membership — no roles."
+      />
 
-      <div className="flex flex-col gap-3">
-        <label className="flex flex-col gap-2">
-          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
-            Email invite (optional)
+      <section className="mt-8 border border-dashed border-hairline bg-surface p-5">
+        <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
+          Invite
+        </p>
+        <label className="mt-4 block">
+          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+            Email (optional)
           </span>
           <input
             type="email"
-            className="h-11 border border-dashed border-hairline bg-transparent px-3 outline-none focus:border-solid"
+            className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
             placeholder="friend@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </label>
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            className="h-11 bg-panel px-5 font-mono text-[11px] font-semibold tracking-[0.16em] text-panel-ink uppercase disabled:opacity-50"
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Button
             disabled={createInvite.isPending}
             onClick={() => createInvite.mutate()}
           >
             {createInvite.isPending ? "Creating…" : "Create invite link"}
-          </button>
+          </Button>
           {mailto ? (
             <a
               href={mailto}
@@ -103,39 +103,38 @@ export default function MembersPage() {
           ) : null}
         </div>
         {inviteUrl ? (
-          <>
-            <code className="max-w-full truncate border border-dashed border-hairline px-3 py-2 font-mono text-xs">
+          <div className="mt-4 space-y-2">
+            <code className="block max-w-full truncate border border-dashed border-hairline bg-canvas px-3 py-2 font-mono text-xs">
               {inviteUrl}
             </code>
             <button
               type="button"
-              className="self-start font-mono text-[11px] tracking-[0.14em] uppercase text-muted hover:text-ink"
+              className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted hover:text-ink"
               onClick={() => void copyLink()}
             >
               {copied ? "Copied" : "Copy link"}
             </button>
-          </>
+          </div>
         ) : null}
-      </div>
-
-      {createInvite.error ? (
-        <p className="text-balance-negative" role="alert">
-          {(createInvite.error as Error).message}
-        </p>
-      ) : null}
+        {createInvite.error ? (
+          <p className="mt-3 text-sm text-balance-negative" role="alert">
+            {(createInvite.error as Error).message}
+          </p>
+        ) : null}
+      </section>
 
       {members.data ? (
-        <ul className="divide-y divide-dashed divide-hairline border border-dashed border-hairline">
+        <ul className="mt-8 divide-y divide-dashed divide-hairline border border-dashed border-hairline">
           {members.data.members.map((member) => (
             <li
               key={member.id}
-              className="flex items-center justify-between gap-4 px-5 py-4"
+              className="flex items-center justify-between gap-4 px-4 py-3"
             >
               <div>
-                <p className="font-medium">{member.displayName ?? "Member"}</p>
-                <p className="font-mono text-[11px] text-muted">
-                  {member.email}
+                <p className="text-sm font-medium">
+                  {member.displayName ?? "Member"}
                 </p>
+                <p className="font-mono text-[11px] text-muted">{member.email}</p>
               </div>
               <p className="font-mono text-[11px] tracking-[0.12em] uppercase text-muted">
                 Joined {new Date(member.joinedAt).toLocaleDateString()}
@@ -145,30 +144,28 @@ export default function MembersPage() {
         </ul>
       ) : null}
 
-      <div className="flex flex-wrap gap-3 border-t border-dashed border-hairline pt-6">
-        <button
-          type="button"
-          className="h-11 border border-dashed border-hairline px-5 font-mono text-[11px] tracking-[0.14em] uppercase text-balance-negative disabled:opacity-50"
+      <div className="mt-10 flex flex-wrap gap-3 border-t border-dashed border-hairline pt-6">
+        <Button
+          variant="danger"
           disabled={leave.isPending}
           onClick={() => {
             if (window.confirm("Leave this group?")) leave.mutate();
           }}
         >
           Leave group
-        </button>
+        </Button>
         {isCreator ? (
-          <button
-            type="button"
-            className="h-11 border border-dashed border-hairline px-5 font-mono text-[11px] tracking-[0.14em] uppercase disabled:opacity-50"
+          <Button
+            variant="ghost"
             disabled={archive.isPending}
             onClick={() => {
               if (window.confirm("Archive this group?")) archive.mutate();
             }}
           >
             Archive group
-          </button>
+          </Button>
         ) : null}
       </div>
-    </div>
+    </main>
   );
 }

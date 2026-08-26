@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MoneyText, parseMajorToMinor } from "@/src/components/MoneyText";
+import { Button } from "@/src/components/ui/Button";
 import { venmoPayLink } from "@/src/core/payments/links";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -87,15 +88,18 @@ export function SettleUpDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="w-full max-w-md border border-hairline bg-canvas p-6 shadow-none"
+        className="w-full max-w-md border border-dashed border-hairline bg-canvas p-6 shadow-none"
       >
+        <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
+          Settlement
+        </p>
         <h2
           id={titleId}
-          className="font-display text-2xl font-bold tracking-[-0.03em] uppercase"
+          className="mt-2 font-display text-2xl font-bold tracking-[-0.03em] uppercase"
         >
           Settle up
         </h2>
-        <p className="mt-2 text-muted">
+        <p className="mt-2 text-sm text-muted">
           {fromDisplayName} pays {toDisplayName}
         </p>
 
@@ -158,20 +162,16 @@ export function SettleUpDialog({
           ) : null}
 
           <div className="mt-2 flex gap-3">
-            <button
-              type="button"
-              className="h-11 flex-1 border border-dashed border-hairline font-mono text-[11px] tracking-[0.14em] uppercase"
-              onClick={onClose}
-            >
+            <Button variant="ghost" className="flex-1" onClick={onClose}>
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
+              className="flex-1"
               disabled={mutation.isPending}
-              className="h-11 flex-1 bg-panel font-mono text-[11px] font-semibold tracking-[0.16em] text-panel-ink uppercase disabled:opacity-50"
             >
               {mutation.isPending ? "Saving…" : "Record payment"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

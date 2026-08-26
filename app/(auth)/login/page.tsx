@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DotMatrixClock } from "@/src/components/DotMatrix";
 import { NoirlyLoginButton } from "@/src/features/auth/NoirlyLoginButton";
 
 export const metadata: Metadata = {
@@ -17,9 +18,14 @@ export default async function LoginPage({
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <header className="flex items-center justify-between border-b border-dashed border-hairline px-5 py-5 md:px-10">
-        <p className="font-display text-lg font-bold tracking-[-0.04em] uppercase md:text-2xl">
-          Noirly Split
-        </p>
+        <div className="flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center border border-dashed border-hairline font-mono text-xs font-bold tracking-[0.12em]">
+            NS
+          </span>
+          <p className="font-display text-lg font-bold tracking-[-0.04em] uppercase md:text-2xl">
+            Noirly Split
+          </p>
+        </div>
       </header>
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
         <div className="pointer-events-none hidden w-10 shrink-0 items-center justify-center border-r border-dashed border-hairline lg:flex">
@@ -30,7 +36,7 @@ export default async function LoginPage({
         <section className="flex flex-1 flex-col justify-between gap-12 px-5 py-10 md:px-12 md:py-16">
           <div>
             <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted">
-              Expenses
+              Groups
             </p>
             <h1 className="text-perforated mt-4 font-display text-5xl leading-[0.9] font-bold tracking-[-0.05em] uppercase md:text-7xl">
               Sign in to Split
@@ -40,6 +46,7 @@ export default async function LoginPage({
               handled by Noirly Identity.
             </p>
           </div>
+          <DotMatrixClock className="text-6xl md:text-8xl" />
         </section>
         <section className="flex w-full flex-col justify-center gap-6 bg-panel px-5 py-10 text-panel-ink md:px-12 md:py-16 lg:w-[42%] lg:max-w-xl">
           <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-panel-ink/55">

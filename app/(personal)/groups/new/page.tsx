@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { PageHeader } from "@/src/components/PageHeader";
+import { Button } from "@/src/components/ui/Button";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
 
@@ -47,16 +49,15 @@ export default function NewGroupPage() {
   });
 
   return (
-    <div className="mx-auto w-full max-w-lg">
-      <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted">
-        Groups
-      </p>
-      <h1 className="mt-3 font-display text-4xl font-bold tracking-[-0.04em] uppercase">
-        New group
-      </h1>
+    <main className="mx-auto w-full max-w-lg px-6 py-8">
+      <PageHeader
+        kicker="Groups"
+        title="New group"
+        lead="A trip, roommates, or recurring friend circle."
+      />
 
       <form
-        className="mt-10 flex flex-col gap-6"
+        className="mt-8 space-y-4 border border-dashed border-hairline bg-surface p-5"
         onSubmit={handleSubmit((values) =>
           mutation.mutate({
             name: values.name,
@@ -66,74 +67,70 @@ export default function NewGroupPage() {
           }),
         )}
       >
-        <label className="flex flex-col gap-2">
-          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+        <label className="block">
+          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
             Name
           </span>
           <input
-            className="h-12 border border-dashed border-hairline bg-transparent px-4 outline-none focus:border-solid"
+            className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
             {...register("name")}
             autoFocus
           />
           {errors.name ? (
-            <span className="text-sm text-balance-negative">
+            <span className="mt-1 block text-sm text-balance-negative">
               {errors.name.message}
             </span>
           ) : null}
         </label>
 
-        <div className="grid grid-cols-2 gap-4">
-          <label className="flex flex-col gap-2">
-            <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block">
+            <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
               Icon
             </span>
             <input
-              className="h-12 border border-dashed border-hairline bg-transparent px-4 outline-none focus:border-solid"
+              className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
               placeholder="🏠"
               {...register("icon")}
             />
           </label>
-          <label className="flex flex-col gap-2">
-            <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+          <label className="block">
+            <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
               Color
             </span>
             <input
-              className="h-12 border border-dashed border-hairline bg-transparent px-4 outline-none focus:border-solid"
+              className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
               placeholder="#000000"
               {...register("color")}
             />
           </label>
         </div>
 
-        <label className="flex flex-col gap-2">
-          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+        <label className="block">
+          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
             Base currency
           </span>
           <input
-            className="h-12 border border-dashed border-hairline bg-transparent px-4 font-mono uppercase outline-none focus:border-solid"
+            className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 font-mono text-sm uppercase outline-none focus:border-solid"
             {...register("baseCurrency")}
           />
           {errors.baseCurrency ? (
-            <span className="text-sm text-balance-negative">
+            <span className="mt-1 block text-sm text-balance-negative">
               {errors.baseCurrency.message}
             </span>
           ) : null}
         </label>
 
         {mutation.error ? (
-          <p className="text-balance-negative" role="alert">
+          <p className="text-sm text-balance-negative" role="alert">
             {(mutation.error as Error).message}
           </p>
         ) : null}
 
-        <button
-          type="submit"
-          disabled={mutation.isPending}
-          className="h-12 bg-panel font-mono text-[11px] font-semibold tracking-[0.16em] text-panel-ink uppercase disabled:opacity-50"
-        >
+        <Button type="submit" disabled={mutation.isPending} className="w-full">
           {mutation.isPending ? "Creating…" : "Create group"}
-        </button>
+        </Button>
       </form>
-    </div>
+    </main>
   );
 }
