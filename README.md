@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Noirly Split
 
-## Getting Started
+Group expense splitting for friends, roommates, and trip parties. Part of the Noirly product suite.
 
-First, run the development server:
+## Stack
+
+- Next.js App Router (port **3005**)
+- Auth.js v5 → Noirly Identity OIDC
+- MongoDB + Mongoose
+- `@noirly-dev/realtime-client` for live sync
+- TanStack Query + Zustand
+- Editorial design tokens (shared with Flow / Identity)
+
+Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+cp .env.example .env.local
+# fill AUTH_*, MONGODB_URI, REALTIME_* (see below)
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Identity client registration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Register a confidential OIDC client named `noirly-split` in Noirly Identity (admin `/clients` or `npm run client:register` in `noirly-identity`), then set:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `AUTH_NOIRLY_ISSUER` (default `http://localhost:3000`)
+- `AUTH_NOIRLY_CLIENT_ID`
+- `AUTH_NOIRLY_CLIENT_SECRET`
+- `AUTH_SECRET` (any long random string)
+- `NEXT_PUBLIC_IDENTITY_URL`
 
-## Learn More
+Redirect URI should include `http://localhost:3005/api/auth/callback/noirly`.
 
-To learn more about Next.js, take a look at the following resources:
+### MongoDB
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Point `MONGODB_URI` at a database named `noirly-split` (or Atlas URI; the app forces `noirly-split` when the path is empty/`test`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Realtime (optional for Groups foundation)
 
-## Deploy on Vercel
+Share `REALTIME_JWT_SECRET` with the noirly-realtime process. Set `NEXT_PUBLIC_REALTIME_WS_URL=ws://127.0.0.1:4001/ws` and `REALTIME_INTERNAL_URL=http://127.0.0.1:4001`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Without realtime env, the app still runs; group channel subscribe is skipped.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Scripts
+
+| Command | Purpose |
+|---|---|
+| `pnpm dev` | Dev server on :3005 |
+| `pnpm test` | Vitest (core money/splits/balances) |
+| `pnpm build` | Production build |
+| `pnpm lint` | ESLint |
+
+## Current slice
+
+Full product surface except mobile: splits (equal/unequal/%/shares), multi-payer, receipts, recurrence, notifications, dashboard balances, reports, leave/archive, presence, Venmo settle links, and `@noirly-dev/split-core` workspace package.

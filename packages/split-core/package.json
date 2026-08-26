@@ -1,0 +1,19 @@
+{
+  "name": "@noirly-dev/split-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./money": "./src/money/index.ts",
+    "./splits": "./src/splits/index.ts",
+    "./balances/net": "./src/balances/net.ts",
+    "./balances/simplify": "./src/balances/simplify.ts",
+    "./recurrence": "./src/recurrence/next.ts",
+    "./payments": "./src/payments/links.ts",
+    "./models": "./src/models/types.ts"
+  },
+  "peerDependencies": {
+    "zod": "^4.0.0"
+  }
+}
