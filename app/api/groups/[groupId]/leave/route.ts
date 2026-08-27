@@ -28,7 +28,7 @@ export async function DELETE(_request: Request, { params }: Params) {
         throw new ApiError(
           400,
           "invalid_request",
-          "Creator must transfer or archive before leaving while others remain",
+          "Creator must archive or delete before leaving while others remain",
         );
       }
       await GroupMember.deleteOne({

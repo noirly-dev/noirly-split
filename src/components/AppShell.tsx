@@ -6,7 +6,6 @@ import { useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { SignOutButton } from "@/src/features/auth/SignOutButton";
 import { CommandPalette } from "@/src/features/command-palette/CommandPalette";
-import { NotificationBell } from "@/src/features/notifications/NotificationBell";
 import { useUIStore } from "@/src/stores/ui-store";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -42,10 +41,7 @@ export function AppShell({ children }: Props) {
   const groupLinks = activeGroupId
     ? [
         { href: `/g/${activeGroupId}`, label: "Expenses", exact: true },
-        { href: `/g/${activeGroupId}/balances`, label: "Balances" },
-        { href: `/g/${activeGroupId}/activity`, label: "Activity" },
-        { href: `/g/${activeGroupId}/reports`, label: "Reports" },
-        { href: `/g/${activeGroupId}/members`, label: "Members" },
+        { href: `/g/${activeGroupId}/settings`, label: "Group" },
       ]
     : [];
 
@@ -67,7 +63,11 @@ export function AppShell({ children }: Props) {
         )}
       >
         <div className="border-b border-dashed border-hairline px-5 py-5">
-          <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-3">
+          <Link
+            href="/"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-3"
+          >
             <span className="flex h-10 w-10 items-center justify-center border border-dashed border-hairline font-mono text-xs font-bold tracking-[0.12em]">
               NS
             </span>
@@ -150,7 +150,7 @@ export function AppShell({ children }: Props) {
                   onClick={() => setOpen(false)}
                   className={navClass(pathname === "/")}
                 >
-                  Dashboard
+                  Groups
                 </Link>
               </li>
               <li>
@@ -162,23 +162,11 @@ export function AppShell({ children }: Props) {
                   New group
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/notifications"
-                  onClick={() => setOpen(false)}
-                  className={navClass(pathname.startsWith("/notifications"))}
-                >
-                  Alerts
-                </Link>
-              </li>
             </ul>
           </section>
         </nav>
 
         <div className="border-t border-dashed border-hairline px-4 py-4">
-          <div className="mb-3 hidden md:block">
-            <NotificationBell />
-          </div>
           <p className="truncate text-sm text-ink">
             {me.data?.user.displayName ?? "…"}
           </p>
@@ -203,9 +191,6 @@ export function AppShell({ children }: Props) {
           <p className="font-display text-sm font-bold tracking-[-0.04em] uppercase">
             {activeGroup?.name ?? "Noirly Split"}
           </p>
-          <div className="ml-auto">
-            <NotificationBell />
-          </div>
         </header>
         <div className="flex min-h-0 flex-1 flex-col">{children}</div>
       </div>

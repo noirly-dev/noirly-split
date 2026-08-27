@@ -36,17 +36,11 @@ export function CommandPalette() {
 
   const items = useMemo(() => {
     const list: Item[] = [
-      { id: "dash", label: "Dashboard", href: "/", group: "Navigate" },
+      { id: "dash", label: "Groups", href: "/", group: "Navigate" },
       {
         id: "new-group",
         label: "New group",
         href: "/groups/new",
-        group: "Navigate",
-      },
-      {
-        id: "alerts",
-        label: "Alerts",
-        href: "/notifications",
         group: "Navigate",
       },
     ];
@@ -66,27 +60,9 @@ export function CommandPalette() {
           group: "Group",
         },
         {
-          id: "g-bal",
-          label: "Balances",
-          href: `/g/${activeGroupId}/balances`,
-          group: "Group",
-        },
-        {
-          id: "g-act",
-          label: "Activity",
-          href: `/g/${activeGroupId}/activity`,
-          group: "Group",
-        },
-        {
-          id: "g-rep",
-          label: "Reports",
-          href: `/g/${activeGroupId}/reports`,
-          group: "Group",
-        },
-        {
-          id: "g-mem",
-          label: "Members",
-          href: `/g/${activeGroupId}/members`,
+          id: "g-settings",
+          label: "Group settings",
+          href: `/g/${activeGroupId}/settings`,
           group: "Group",
         },
       );
@@ -165,7 +141,7 @@ export function CommandPalette() {
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search or jump…"
+            placeholder="Search groups…"
             className="w-full border-b border-dashed border-hairline bg-transparent px-4 py-3 text-sm outline-none"
             onKeyDown={(e) => {
               if (e.key === "Escape") {

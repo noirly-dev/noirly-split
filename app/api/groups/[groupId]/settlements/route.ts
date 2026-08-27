@@ -120,7 +120,7 @@ export async function POST(request: Request, { params }: Params) {
         type: "settlement.recorded",
         title: "Settlement recorded",
         body: `${ctx.displayName} recorded a settlement`,
-        href: `/g/${groupId}/balances`,
+        href: `/g/${groupId}`,
       });
       return mapped;
     });

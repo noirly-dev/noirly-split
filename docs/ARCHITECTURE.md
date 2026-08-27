@@ -420,7 +420,7 @@ Success: domain JSON; lists may include `{ items, nextCursor }`.
 | PATCH | `/api/me` | preferredCurrency, name |
 | GET | `/api/dashboard/balances` | Cross-group you-owe / you-are-owed totals |
 | GET/POST | `/api/groups` | List / create |
-| GET/PATCH/DELETE | `/api/groups/:id` | Detail / update / archive |
+| GET/PATCH/DELETE | `/api/groups/:id` | Detail / update / hard-delete (creator; cascades) |
 | GET/POST | `/api/groups/:id/members` | List / add (invite accept path) |
 | POST | `/api/groups/:id/invites` | Create link or email invite |
 | GET/POST | `/api/invites/:token` | Preview / accept |
@@ -865,7 +865,8 @@ MVP settlements always in `group.baseCurrency`. Cross-currency settlement is out
 - Partial settlement suggestions / payment app deep links (non-custodial)  
 - FX rate admin / manual override UX  
 - Search, filters, category reports  
-- Soft group archive + leave group  
+- Soft group archive + hard delete (creator) + leave group
+- Product surface: Groups CRUD + Expenses CRUD (settings/invite under group)  
 - Presence on group channel (“Alex is adding an expense”)  
 
 ---

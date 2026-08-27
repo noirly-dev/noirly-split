@@ -106,10 +106,6 @@ export function ExpenseForm({
     initial?.receiptUrl ?? null,
   );
   const [uploading, setUploading] = useState(false);
-  const [isRecurring, setIsRecurring] = useState(initial?.isRecurring ?? false);
-  const [recurrenceFreq, setRecurrenceFreq] = useState<"weekly" | "monthly">(
-    initial?.recurrenceRule?.frequency ?? "monthly",
-  );
   const [error, setError] = useState<string | null>(null);
 
   const memberList = members.data?.members ?? [];
@@ -350,10 +346,8 @@ export function ExpenseForm({
                   ? Number(shares[userId] ?? 1)
                   : undefined,
             })),
-      isRecurring,
-      recurrence: isRecurring
-        ? { frequency: recurrenceFreq, interval: 1 }
-        : null,
+      isRecurring: false,
+      recurrence: null,
     });
   }
 
@@ -651,29 +645,6 @@ export function ExpenseForm({
           />
         ) : null}
       </label>
-
-      <label className="flex items-center gap-3">
-        <input
-          type="checkbox"
-          checked={isRecurring}
-          onChange={(e) => setIsRecurring(e.target.checked)}
-        />
-        <span className="font-mono text-[11px] tracking-[0.14em] uppercase">
-          Recurring
-        </span>
-      </label>
-      {isRecurring ? (
-        <select
-          className="h-11 border border-dashed border-hairline bg-transparent px-3 outline-none"
-          value={recurrenceFreq}
-          onChange={(e) =>
-            setRecurrenceFreq(e.target.value as "weekly" | "monthly")
-          }
-        >
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-        </select>
-      ) : null}
 
       {error ? (
         <p className="text-balance-negative" role="alert">

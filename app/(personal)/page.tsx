@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/src/components/PageHeader";
 import { Button } from "@/src/components/ui/Button";
-import { MoneyText } from "@/src/components/MoneyText";
-import { DashboardBalancesBanner } from "@/src/features/dashboard/DashboardBalancesBanner";
 import { DotMatrixNumeral } from "@/src/components/DotMatrix";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -15,17 +13,13 @@ export default function HomePage() {
     queryKey: qk.groups,
     queryFn: () => api.listGroups(),
   });
-  const balances = useQuery({
-    queryKey: qk.dashboardBalances(),
-    queryFn: () => api.dashboardBalances(),
-  });
 
   return (
     <main className="mx-auto w-full max-w-5xl px-6 py-8">
       <PageHeader
         kicker="Personal"
-        title="Dashboard"
-        lead="Trips, roommates, and friend circles — split costs and settle up."
+        title="Groups"
+        lead="Create a group, invite people, and track shared expenses."
         action={
           <Link href="/groups/new">
             <Button>New group</Button>
@@ -33,47 +27,13 @@ export default function HomePage() {
         }
       />
 
-      <div className="mt-8 grid gap-3 sm:grid-cols-3">
-        <StatCard
-          label="Groups"
-          value={
-            <DotMatrixNumeral className="text-3xl">
-              {String(data?.groups.length ?? 0).padStart(2, "0")}
-            </DotMatrixNumeral>
-          }
-        />
-        <StatCard
-          label="You are owed"
-          value={
-            balances.data && !balances.data.mixed && balances.data.currency ? (
-              <MoneyText
-                amount={balances.data.owedToYou ?? 0}
-                currency={balances.data.currency}
-                className="text-xl text-balance-positive"
-              />
-            ) : (
-              <span className="text-sm text-muted">—</span>
-            )
-          }
-        />
-        <StatCard
-          label="You owe"
-          value={
-            balances.data && !balances.data.mixed && balances.data.currency ? (
-              <MoneyText
-                amount={balances.data.youOwe ?? 0}
-                currency={balances.data.currency}
-                className="text-xl text-balance-negative"
-              />
-            ) : (
-              <span className="text-sm text-muted">—</span>
-            )
-          }
-        />
-      </div>
-
-      <div className="mt-8">
-        <DashboardBalancesBanner />
+      <div className="mt-8 border border-dashed border-hairline bg-surface p-5 sm:max-w-xs">
+        <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+          Groups
+        </p>
+        <DotMatrixNumeral className="mt-3 text-3xl">
+          {String(data?.groups.length ?? 0).padStart(2, "0")}
+        </DotMatrixNumeral>
       </div>
 
       <section className="mt-10">
@@ -104,7 +64,7 @@ export default function HomePage() {
               No groups yet
             </p>
             <p className="mt-2 text-sm text-muted">
-              Create a group to start splitting costs.
+              Create a group to start adding expenses.
             </p>
             <Link href="/groups/new" className="mt-6 inline-block">
               <Button>Create group</Button>
@@ -141,22 +101,5 @@ export default function HomePage() {
         ) : null}
       </section>
     </main>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
-  return (
-    <div className="border border-dashed border-hairline bg-surface p-5">
-      <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
-        {label}
-      </p>
-      <div className="mt-3">{value}</div>
-    </div>
   );
 }

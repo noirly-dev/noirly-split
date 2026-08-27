@@ -101,9 +101,28 @@ export const api = {
   getGroup(groupId: string) {
     return request<{ group: Group }>(`/api/groups/${groupId}`);
   },
+  updateGroup(
+    groupId: string,
+    body: {
+      name?: string;
+      icon?: string | null;
+      color?: string | null;
+      baseCurrency?: string;
+    },
+  ) {
+    return request<{ group: Group }>(`/api/groups/${groupId}`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    });
+  },
   archiveGroup(groupId: string) {
     return request<{ group: Group }>(`/api/groups/${groupId}/archive`, {
       method: "POST",
+    });
+  },
+  deleteGroup(groupId: string) {
+    return request<{ ok: boolean }>(`/api/groups/${groupId}`, {
+      method: "DELETE",
     });
   },
   leaveGroup(groupId: string) {

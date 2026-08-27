@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { PageHeader } from "@/src/components/PageHeader";
 import { Button } from "@/src/components/ui/Button";
 import { MoneyText } from "@/src/components/MoneyText";
@@ -13,20 +12,14 @@ import { api } from "@/src/lib/api-client";
 export default function GroupExpensesPage() {
   const params = useParams<{ groupId: string }>();
   const groupId = params.groupId;
-  const [q, setQ] = useState("");
-  const [category, setCategory] = useState("");
 
   const group = useQuery({
     queryKey: qk.group(groupId),
     queryFn: () => api.getGroup(groupId),
   });
   const expenses = useQuery({
-    queryKey: [...qk.expenses(groupId), q, category],
-    queryFn: () =>
-      api.listExpenses(groupId, {
-        q: q || undefined,
-        category: category || undefined,
-      }),
+    queryKey: qk.expenses(groupId),
+    queryFn: () => api.listExpenses(groupId),
   });
   const members = useQuery({
     queryKey: qk.members(groupId),
@@ -42,42 +35,13 @@ export default function GroupExpensesPage() {
       <PageHeader
         kicker="Expenses"
         title={group.data?.group.name ?? "Group"}
-        lead="Shared costs in this group."
+        lead="Add, edit, or remove shared costs."
         action={
-          <>
-            <a
-              href={api.exportCsvUrl(groupId)}
-              className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted hover:text-ink"
-            >
-              Export CSV
-            </a>
-            <Link href={`/g/${groupId}/expenses/new`}>
-              <Button>Add expense</Button>
-            </Link>
-          </>
+          <Link href={`/g/${groupId}/expenses/new`}>
+            <Button>Add expense</Button>
+          </Link>
         }
       />
-
-      <div className="mt-6 flex flex-wrap gap-3">
-        <input
-          className="h-10 flex-1 border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
-          placeholder="Search description"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-        <select
-          className="h-10 border border-dashed border-hairline bg-transparent px-3 text-sm outline-none"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="">All categories</option>
-          <option value="food">Food</option>
-          <option value="travel">Travel</option>
-          <option value="rent">Rent</option>
-          <option value="utilities">Utilities</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
 
       {expenses.isLoading ? (
         <p className="mt-6 text-sm text-muted">Loading expenses…</p>
@@ -89,7 +53,17 @@ export default function GroupExpensesPage() {
       ) : null}
 
       {expenses.data && expenses.data.expenses.length === 0 ? (
-        <p className="mt-6 text-sm text-muted">No expenses yet.</p>
+        <div className="mt-6 border border-dashed border-hairline px-6 py-10">
+          <p className="font-display text-2xl font-bold uppercase tracking-[-0.03em]">
+            No expenses yet
+          </p>
+          <p className="mt-2 text-sm text-muted">
+            Add the first shared cost for this group.
+          </p>
+          <Link href={`/g/${groupId}/expenses/new`} className="mt-6 inline-block">
+            <Button>Add expense</Button>
+          </Link>
+        </div>
       ) : null}
 
       {expenses.data && expenses.data.expenses.length > 0 ? (

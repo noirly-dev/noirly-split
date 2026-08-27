@@ -10,7 +10,15 @@ import {
 import { withDb } from "@/src/server/db/mongodb";
 import { requireGroupMembership } from "@/src/server/groups/access";
 import { mapGroup } from "@/src/server/mappers";
-import { ActivityEvent, Group } from "@/src/server/models";
+import {
+  ActivityEvent,
+  Expense,
+  Group,
+  GroupInvite,
+  GroupMember,
+  Notification,
+  Settlement,
+} from "@/src/server/models";
 
 const patchGroupSchema = z.object({
   name: z.string().trim().min(1).max(80).optional(),
@@ -94,7 +102,16 @@ export async function DELETE(_request: Request, { params }: Params) {
           "Only the creator can delete this group",
         );
       }
-      await Group.findByIdAndDelete(groupId);
+      const oid = new Types.ObjectId(groupId);
+      await Promise.all([
+        Expense.deleteMany({ groupId: oid }),
+        Settlement.deleteMany({ groupId: oid }),
+        ActivityEvent.deleteMany({ groupId: oid }),
+        GroupInvite.deleteMany({ groupId: oid }),
+        GroupMember.deleteMany({ groupId: oid }),
+        Notification.deleteMany({ groupId: oid }),
+        Group.findByIdAndDelete(groupId),
+      ]);
     });
     return jsonOk({ ok: true });
   } catch (error) {
