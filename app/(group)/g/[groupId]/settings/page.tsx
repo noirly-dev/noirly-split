@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { PageHeader } from "@/src/components/PageHeader";
-import { Button } from "@/src/components/ui/Button";
+import { Button, PageHeader } from "@noirly-dev/ui";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
 
@@ -109,21 +108,21 @@ export default function GroupSettingsPage() {
       />
 
       <form
-        className="mt-8 space-y-4 border border-dashed border-hairline bg-surface p-5"
+        className="mt-8 space-y-4 border border border-[var(--hairline)] bg-[var(--surface)] p-5"
         onSubmit={(e) => {
           e.preventDefault();
           update.mutate();
         }}
       >
-        <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
+        <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground-foreground">
           Details
         </p>
         <label className="block">
-          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
             Name
           </span>
           <input
-            className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
+            className="h-10 w-full border border border-[var(--hairline)] bg-transparent px-3 text-sm outline-none focus:border-solid"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -131,32 +130,32 @@ export default function GroupSettingsPage() {
         </label>
         <div className="grid grid-cols-2 gap-3">
           <label className="block">
-            <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+            <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
               Icon
             </span>
             <input
-              className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
+              className="h-10 w-full border border border-[var(--hairline)] bg-transparent px-3 text-sm outline-none focus:border-solid"
               value={icon}
               onChange={(e) => setIcon(e.target.value)}
             />
           </label>
           <label className="block">
-            <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+            <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
               Color
             </span>
             <input
-              className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
+              className="h-10 w-full border border border-[var(--hairline)] bg-transparent px-3 text-sm outline-none focus:border-solid"
               value={color}
               onChange={(e) => setColor(e.target.value)}
             />
           </label>
         </div>
         <label className="block">
-          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
             Base currency
           </span>
           <input
-            className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 font-mono text-sm uppercase outline-none focus:border-solid"
+            className="h-10 w-full border border border-[var(--hairline)] bg-transparent px-3 font-mono text-sm uppercase outline-none focus:border-solid"
             value={baseCurrency}
             onChange={(e) => setBaseCurrency(e.target.value.toUpperCase())}
             maxLength={3}
@@ -169,24 +168,24 @@ export default function GroupSettingsPage() {
           </p>
         ) : null}
         {update.isSuccess ? (
-          <p className="text-sm text-muted">Saved.</p>
+          <p className="text-sm text-muted-foreground-foreground">Saved.</p>
         ) : null}
         <Button type="submit" disabled={update.isPending}>
           {update.isPending ? "Saving…" : "Save group"}
         </Button>
       </form>
 
-      <section className="mt-8 border border-dashed border-hairline bg-surface p-5">
-        <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
+      <section className="mt-8 border border border-[var(--hairline)] bg-[var(--surface)] p-5">
+        <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground-foreground">
           Invite
         </p>
         <label className="mt-4 block">
-          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
             Email (optional)
           </span>
           <input
             type="email"
-            className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
+            className="h-10 w-full border border border-[var(--hairline)] bg-transparent px-3 text-sm outline-none focus:border-solid"
             placeholder="friend@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -202,7 +201,7 @@ export default function GroupSettingsPage() {
           {mailto ? (
             <a
               href={mailto}
-              className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted hover:text-ink"
+              className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground hover:text-foreground"
             >
               Open email draft
             </a>
@@ -210,12 +209,12 @@ export default function GroupSettingsPage() {
         </div>
         {inviteUrl ? (
           <div className="mt-4 space-y-2">
-            <code className="block max-w-full truncate border border-dashed border-hairline bg-canvas px-3 py-2 font-mono text-xs">
+            <code className="block max-w-full truncate border border border-[var(--hairline)] bg-background px-3 py-2 font-mono text-xs">
               {inviteUrl}
             </code>
             <button
               type="button"
-              className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted hover:text-ink"
+              className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground hover:text-foreground"
               onClick={() => void copyLink()}
             >
               {copied ? "Copied" : "Copy link"}
@@ -230,7 +229,7 @@ export default function GroupSettingsPage() {
       </section>
 
       {members.data ? (
-        <ul className="mt-8 divide-y divide-dashed divide-hairline border border-dashed border-hairline">
+        <ul className="mt-8 divide-y divide-dashed divide-[var(--hairline)] border border border-[var(--hairline)]">
           {members.data.members.map((member) => (
             <li
               key={member.id}
@@ -240,9 +239,9 @@ export default function GroupSettingsPage() {
                 <p className="text-sm font-medium">
                   {member.displayName ?? "Member"}
                 </p>
-                <p className="font-mono text-[11px] text-muted">{member.email}</p>
+                <p className="font-mono text-[11px] text-muted-foreground-foreground">{member.email}</p>
               </div>
-              <p className="font-mono text-[11px] tracking-[0.12em] uppercase text-muted">
+              <p className="font-mono text-[11px] tracking-[0.12em] uppercase text-muted-foreground-foreground">
                 Joined {new Date(member.joinedAt).toLocaleDateString()}
               </p>
             </li>
@@ -250,9 +249,9 @@ export default function GroupSettingsPage() {
         </ul>
       ) : null}
 
-      <div className="mt-10 flex flex-wrap gap-3 border-t border-dashed border-hairline pt-6">
+      <div className="mt-10 flex flex-wrap gap-3 border-t border border-[var(--hairline)] pt-6">
         <Button
-          variant="danger"
+          variant="destructive"
           disabled={!canLeave || leave.isPending}
           onClick={() => {
             if (window.confirm("Leave this group?")) leave.mutate();
@@ -272,7 +271,7 @@ export default function GroupSettingsPage() {
               Archive group
             </Button>
             <Button
-              variant="danger"
+              variant="destructive"
               disabled={remove.isPending || archive.isPending}
               onClick={() => {
                 if (
@@ -289,7 +288,7 @@ export default function GroupSettingsPage() {
           </>
         ) : null}
         {!canLeave ? (
-          <p className="w-full text-sm text-muted">
+          <p className="w-full text-sm text-muted-foreground-foreground">
             As creator, archive or delete the group instead of leaving while
             others remain.
           </p>
@@ -309,7 +308,7 @@ export default function GroupSettingsPage() {
       <p className="mt-8">
         <Link
           href={`/g/${groupId}`}
-          className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted hover:text-ink"
+          className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground hover:text-foreground"
         >
           ← Back to expenses
         </Link>

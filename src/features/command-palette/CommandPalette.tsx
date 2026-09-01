@@ -135,14 +135,14 @@ export function CommandPalette() {
           role="dialog"
           aria-modal="true"
           aria-label="Command palette"
-          className="overflow-hidden border border-dashed border-hairline bg-canvas shadow-none"
+          className="overflow-hidden border border border-[var(--hairline)] bg-background shadow-none"
         >
           <input
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search groups…"
-            className="w-full border-b border-dashed border-hairline bg-transparent px-4 py-3 text-sm outline-none"
+            className="w-full border-b border border-[var(--hairline)] bg-transparent px-4 py-3 text-sm outline-none"
             onKeyDown={(e) => {
               if (e.key === "Escape") {
                 e.preventDefault();
@@ -161,11 +161,11 @@ export function CommandPalette() {
           />
           <div className="max-h-80 overflow-y-auto p-2">
             {items.length === 0 ? (
-              <p className="px-3 py-6 text-sm text-muted">No results</p>
+              <p className="px-3 py-6 text-sm text-muted-foreground-foreground">No results</p>
             ) : null}
             {Object.entries(grouped).map(([group, groupItems]) => (
               <div key={group} className="mb-2">
-                <p className="px-3 py-1 font-mono text-[10px] tracking-[0.16em] uppercase text-muted">
+                <p className="px-3 py-1 font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground-foreground">
                   {group}
                 </p>
                 <ul>
@@ -178,8 +178,8 @@ export function CommandPalette() {
                           className={cn(
                             "flex w-full items-center justify-between px-3 py-2 text-left text-sm",
                             index === active
-                              ? "bg-ink text-canvas"
-                              : "hover:bg-surface",
+                              ? "bg-[var(--accent-soft)] text-[var(--accent)]"
+                              : "hover:bg-[var(--surface)]",
                           )}
                           onMouseEnter={() => setActive(index)}
                           onClick={() => go(item.href)}

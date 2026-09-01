@@ -40,7 +40,7 @@ function ExpensePresenceInner({ groupId }: { groupId: string }) {
 
   return (
     <p
-      className="font-mono text-[11px] tracking-[0.12em] uppercase text-muted"
+      className="font-mono text-[11px] tracking-[0.12em] uppercase text-muted-foreground-foreground"
       aria-live="polite"
     >
       {others.length === 1

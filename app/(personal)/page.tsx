@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { PageHeader } from "@/src/components/PageHeader";
-import { Button } from "@/src/components/ui/Button";
+import { Button, PageHeader } from "@noirly-dev/ui";
 import { DotMatrixNumeral } from "@/src/components/DotMatrix";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -27,8 +26,8 @@ export default function HomePage() {
         }
       />
 
-      <div className="mt-8 border border-dashed border-hairline bg-surface p-5 sm:max-w-xs">
-        <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+      <div className="mt-8 border border border-[var(--hairline)] bg-[var(--surface)] p-5 sm:max-w-xs">
+        <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
           Groups
         </p>
         <DotMatrixNumeral className="mt-3 text-3xl">
@@ -38,19 +37,19 @@ export default function HomePage() {
 
       <section className="mt-10">
         <div className="flex items-end justify-between gap-3">
-          <h2 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
+          <h2 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground-foreground">
             Your groups
           </h2>
           <Link
             href="/groups/new"
-            className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted hover:text-ink"
+            className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground hover:text-foreground"
           >
             Add →
           </Link>
         </div>
 
         {isLoading ? (
-          <p className="mt-4 text-sm text-muted">Loading groups…</p>
+          <p className="mt-4 text-sm text-muted-foreground-foreground">Loading groups…</p>
         ) : null}
         {error ? (
           <p className="mt-4 text-sm text-balance-negative" role="alert">
@@ -59,11 +58,11 @@ export default function HomePage() {
         ) : null}
 
         {data && data.groups.length === 0 ? (
-          <div className="mt-4 border border-dashed border-hairline px-6 py-10">
+          <div className="mt-4 border border border-[var(--hairline)] px-6 py-10">
             <p className="font-display text-2xl font-bold uppercase tracking-[-0.03em]">
               No groups yet
             </p>
-            <p className="mt-2 text-sm text-muted">
+            <p className="mt-2 text-sm text-muted-foreground-foreground">
               Create a group to start adding expenses.
             </p>
             <Link href="/groups/new" className="mt-6 inline-block">
@@ -78,7 +77,7 @@ export default function HomePage() {
               <li key={group.id}>
                 <Link
                   href={`/g/${group.id}`}
-                  className="block border border-dashed border-hairline bg-surface p-4 transition-colors hover:bg-ink hover:text-canvas"
+                  className="block border border border-[var(--hairline)] bg-[var(--surface)] p-4 transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--foreground)]"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Button } from "@/src/components/ui/Button";
+import { Button } from "@noirly-dev/ui";
 import { DotMatrixClock } from "@/src/components/DotMatrix";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -40,9 +40,9 @@ export default function InvitePage() {
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col">
-      <header className="flex items-center justify-between border-b border-dashed border-hairline px-5 py-5 md:px-10">
+      <header className="flex items-center justify-between border-b border border-[var(--hairline)] px-5 py-5 md:px-10">
         <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center border border-dashed border-hairline font-mono text-xs font-bold tracking-[0.12em]">
+          <span className="flex h-11 w-11 items-center justify-center border border border-[var(--hairline)] font-mono text-xs font-bold tracking-[0.12em]">
             NS
           </span>
           <p className="font-display text-lg font-bold tracking-[-0.04em] uppercase md:text-2xl">
@@ -52,7 +52,7 @@ export default function InvitePage() {
       </header>
 
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <div className="pointer-events-none hidden w-10 shrink-0 items-center justify-center border-r border-dashed border-hairline lg:flex">
+        <div className="pointer-events-none hidden w-10 shrink-0 items-center justify-center border-r border border-[var(--hairline)] lg:flex">
           <span className="font-mono text-[10px] font-medium tracking-[0.28em] uppercase [writing-mode:vertical-rl] rotate-180">
             Invite
           </span>
@@ -60,7 +60,7 @@ export default function InvitePage() {
 
         <section className="flex flex-1 flex-col justify-between gap-12 px-5 py-10 md:px-12 md:py-16">
           {preview.isLoading ? (
-            <p className="text-sm text-muted">Loading invite…</p>
+            <p className="text-sm text-muted-foreground-foreground">Loading invite…</p>
           ) : null}
           {preview.error ? (
             <p className="text-sm text-balance-negative" role="alert">
@@ -69,13 +69,13 @@ export default function InvitePage() {
           ) : null}
           {preview.data ? (
             <div>
-              <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted">
+              <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted-foreground-foreground">
                 Join group
               </p>
               <h1 className="text-perforated mt-4 font-display text-5xl leading-[0.9] font-bold tracking-[-0.05em] uppercase md:text-7xl">
                 {preview.data.group.name}
               </h1>
-              <p className="mt-6 max-w-md text-base text-muted">
+              <p className="mt-6 max-w-md text-base text-muted-foreground-foreground">
                 You’ve been invited to split expenses. Base currency{" "}
                 <span className="font-mono">
                   {preview.data.group.baseCurrency}
@@ -83,7 +83,7 @@ export default function InvitePage() {
                 .
               </p>
               {preview.data.email ? (
-                <p className="mt-3 text-sm text-muted">
+                <p className="mt-3 text-sm text-muted-foreground-foreground">
                   Sent for{" "}
                   <span className="font-mono">{preview.data.email}</span>.
                 </p>
@@ -93,17 +93,17 @@ export default function InvitePage() {
           <DotMatrixClock className="text-6xl md:text-8xl" />
         </section>
 
-        <section className="flex w-full flex-col justify-center gap-6 bg-panel px-5 py-10 text-panel-ink md:px-12 md:py-16 lg:w-[42%] lg:max-w-xl">
-          <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-panel-ink/55">
+        <section className="flex w-full flex-col justify-center gap-6 bg-[var(--surface-2)] px-5 py-10 text-[var(--accent-ink)] md:px-12 md:py-16 lg:w-[42%] lg:max-w-xl">
+          <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-[var(--accent-ink)]/55">
             Continue
           </p>
           {error ? (
-            <p className="text-sm text-panel-ink/80" role="alert">
+            <p className="text-sm text-[var(--accent-ink)]/80" role="alert">
               {error}
             </p>
           ) : null}
           <Button
-            variant="ticket"
+            className="h-12 w-full font-mono text-[11px] uppercase tracking-[0.16em]"
             disabled={!preview.data || accept.isPending}
             onClick={() => {
               setError(null);
@@ -114,7 +114,7 @@ export default function InvitePage() {
           </Button>
           <Link
             href={`/login?next=${encodeURIComponent(`/invites/${token}`)}`}
-            className="font-mono text-[11px] tracking-[0.14em] uppercase text-panel-ink/55 hover:text-panel-ink"
+            className="font-mono text-[11px] tracking-[0.14em] uppercase text-[var(--accent-ink)]/55 hover:text-[var(--accent-ink)]"
           >
             Sign in first if needed →
           </Link>

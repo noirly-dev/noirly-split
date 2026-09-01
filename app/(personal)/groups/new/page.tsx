@@ -5,8 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PageHeader } from "@/src/components/PageHeader";
-import { Button } from "@/src/components/ui/Button";
+import { Button, PageHeader } from "@noirly-dev/ui";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
 
@@ -57,7 +56,7 @@ export default function NewGroupPage() {
       />
 
       <form
-        className="mt-8 space-y-4 border border-dashed border-hairline bg-surface p-5"
+        className="mt-8 space-y-4 border border border-[var(--hairline)] bg-[var(--surface)] p-5"
         onSubmit={handleSubmit((values) =>
           mutation.mutate({
             name: values.name,
@@ -68,11 +67,11 @@ export default function NewGroupPage() {
         )}
       >
         <label className="block">
-          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
             Name
           </span>
           <input
-            className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
+            className="h-10 w-full border border border-[var(--hairline)] bg-transparent px-3 text-sm outline-none focus:border-solid"
             {...register("name")}
             autoFocus
           />
@@ -85,21 +84,21 @@ export default function NewGroupPage() {
 
         <div className="grid grid-cols-2 gap-3">
           <label className="block">
-            <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+            <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
               Icon
             </span>
             <input
-              className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
+              className="h-10 w-full border border border-[var(--hairline)] bg-transparent px-3 text-sm outline-none focus:border-solid"
               placeholder="🏠"
               {...register("icon")}
             />
           </label>
           <label className="block">
-            <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+            <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
               Color
             </span>
             <input
-              className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 text-sm outline-none focus:border-solid"
+              className="h-10 w-full border border border-[var(--hairline)] bg-transparent px-3 text-sm outline-none focus:border-solid"
               placeholder="#000000"
               {...register("color")}
             />
@@ -107,11 +106,11 @@ export default function NewGroupPage() {
         </div>
 
         <label className="block">
-          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+          <span className="mb-1 block font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
             Base currency
           </span>
           <input
-            className="h-10 w-full border border-dashed border-hairline bg-transparent px-3 font-mono text-sm uppercase outline-none focus:border-solid"
+            className="h-10 w-full border border border-[var(--hairline)] bg-transparent px-3 font-mono text-sm uppercase outline-none focus:border-solid"
             {...register("baseCurrency")}
           />
           {errors.baseCurrency ? (

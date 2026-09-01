@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { PageHeader } from "@/src/components/PageHeader";
-import { Button } from "@/src/components/ui/Button";
+import { Button, PageHeader } from "@noirly-dev/ui";
 import { MoneyText } from "@/src/components/MoneyText";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -51,7 +50,7 @@ export default function ExpenseDetailPage() {
   if (expense.isLoading) {
     return (
       <main className="mx-auto w-full max-w-3xl px-6 py-8">
-        <p className="text-sm text-muted">Loading…</p>
+        <p className="text-sm text-muted-foreground-foreground">Loading…</p>
       </main>
     );
   }
@@ -74,7 +73,7 @@ export default function ExpenseDetailPage() {
     <main className="mx-auto w-full max-w-3xl px-6 py-8">
       <Link
         href={`/g/${groupId}`}
-        className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted hover:text-ink"
+        className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground hover:text-foreground"
       >
         ← Expenses
       </Link>
@@ -91,7 +90,7 @@ export default function ExpenseDetailPage() {
                 <Button variant="ghost">Edit</Button>
               </Link>
               <Button
-                variant="danger"
+                variant="destructive"
                 disabled={del.isPending}
                 onClick={() => {
                   if (window.confirm("Delete this expense?")) del.mutate();
@@ -104,14 +103,14 @@ export default function ExpenseDetailPage() {
         }
       />
 
-      <div className="mt-8 border border-dashed border-hairline bg-surface p-5">
+      <div className="mt-8 border border border-[var(--hairline)] bg-[var(--surface)] p-5">
         <MoneyText
           amount={e.amount}
           currency={e.currency}
           className="text-3xl font-bold"
         />
         {e.currency !== baseCurrency || e.fxRateToBase !== 1 ? (
-          <p className="mt-2 text-sm text-muted">
+          <p className="mt-2 text-sm text-muted-foreground-foreground">
             ≈ <MoneyText amount={e.amountInBase} currency={baseCurrency} />
             {e.fxRateToBase !== 1 ? ` at rate ${e.fxRateToBase}` : ""}
           </p>
@@ -123,15 +122,15 @@ export default function ExpenseDetailPage() {
         <img
           src={e.receiptUrl}
           alt="Receipt"
-          className="mt-6 max-h-56 border border-dashed border-hairline object-contain"
+          className="mt-6 max-h-56 border border border-[var(--hairline)] object-contain"
         />
       ) : null}
 
       <section className="mt-8">
-        <h2 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
+        <h2 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground-foreground">
           Paid by
         </h2>
-        <ul className="mt-3 divide-y divide-dashed divide-hairline border border-dashed border-hairline">
+        <ul className="mt-3 divide-y divide-dashed divide-[var(--hairline)] border border border-[var(--hairline)]">
           {e.payers.map((p) => (
             <li key={p.userId} className="flex justify-between px-4 py-3 text-sm">
               <span>{nameOf(p.userId)}</span>
@@ -142,10 +141,10 @@ export default function ExpenseDetailPage() {
       </section>
 
       <section className="mt-8">
-        <h2 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted">
+        <h2 className="font-mono text-[11px] tracking-[0.16em] uppercase text-muted-foreground-foreground">
           Split
         </h2>
-        <ul className="mt-3 divide-y divide-dashed divide-hairline border border-dashed border-hairline">
+        <ul className="mt-3 divide-y divide-dashed divide-[var(--hairline)] border border border-[var(--hairline)]">
           {e.splits.map((s) => (
             <li key={s.userId} className="flex justify-between px-4 py-3 text-sm">
               <span>{nameOf(s.userId)}</span>

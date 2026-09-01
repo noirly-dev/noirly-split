@@ -16,7 +16,7 @@ import {
   parseMajorToMinor,
   todayISODate,
 } from "@/src/components/MoneyText";
-import { Button } from "@/src/components/ui/Button";
+import { Button, Input, Label, Textarea } from "@noirly-dev/ui";
 import { api, type CreateExpenseBody } from "@/src/lib/api-client";
 import { ExpensePresence } from "@/src/features/realtime/ExpensePresence";
 
@@ -356,31 +356,29 @@ export function ExpenseForm({
 
   return (
     <form
-      className="flex w-full flex-col gap-5 border border-dashed border-hairline bg-surface p-5"
+      className="flex w-full flex-col gap-5 rounded-[var(--r-lg)] border border-[var(--hairline)] bg-[var(--surface)] p-5"
       onSubmit={onSubmit}
     >
       <ExpensePresence groupId={groupId} />
 
-      <label className="flex flex-col gap-2">
-        <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
-          Description
-        </span>
-        <input
-          className="h-12 border border-dashed border-hairline bg-transparent px-4 outline-none focus:border-solid"
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="expense-description">Description</Label>
+        <Textarea
+          id="expense-description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           autoFocus
           required
+          rows={2}
         />
-      </label>
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <label className="flex flex-col gap-2">
-          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
-            Amount
-          </span>
-          <input
-            className="h-12 border border-dashed border-hairline bg-transparent px-4 font-mono outline-none focus:border-solid"
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="expense-amount">Amount</Label>
+          <Input
+            id="expense-amount"
+            className="font-mono"
             inputMode="decimal"
             placeholder="0.00"
             value={amountMajor}
@@ -392,32 +390,30 @@ export function ExpenseForm({
             }}
             required
           />
-        </label>
-        <label className="flex flex-col gap-2">
-          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
-            Currency
-          </span>
-          <input
-            className="h-12 border border-dashed border-hairline bg-transparent px-4 font-mono uppercase outline-none focus:border-solid"
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="expense-currency">Currency</Label>
+          <Input
+            id="expense-currency"
+            className="font-mono uppercase"
             value={currency}
             onChange={(e) => setCurrency(e.target.value.toUpperCase())}
             maxLength={3}
           />
-        </label>
+        </div>
       </div>
 
       {currency.toUpperCase() !== baseCurrency ? (
-        <label className="flex flex-col gap-2">
-          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
-            FX rate → {baseCurrency} (locked at entry)
-          </span>
-          <input
-            className="h-12 border border-dashed border-hairline bg-transparent px-4 font-mono outline-none focus:border-solid"
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="expense-fx">FX rate → {baseCurrency} (locked at entry)</Label>
+          <Input
+            id="expense-fx"
+            className="font-mono"
             value={fxRate}
             onChange={(e) => setFxRate(e.target.value)}
           />
           {amountMinor != null && Number(fxRate) > 0 ? (
-            <p className="text-sm text-muted">
+            <p className="text-sm text-[var(--muted-foreground)]">
               ≈{" "}
               <MoneyText
                 amount={Math.round(amountMinor * Number(fxRate))}
@@ -425,27 +421,24 @@ export function ExpenseForm({
               />
             </p>
           ) : null}
-        </label>
+        </div>
       ) : null}
 
       <div className="grid grid-cols-2 gap-4">
-        <label className="flex flex-col gap-2">
-          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
-            Date
-          </span>
-          <input
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="expense-date">Date</Label>
+          <Input
+            id="expense-date"
             type="date"
-            className="h-12 border border-dashed border-hairline bg-transparent px-4 outline-none focus:border-solid"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
-        </label>
-        <label className="flex flex-col gap-2">
-          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
-            Category
-          </span>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="expense-category">Category</Label>
           <select
-            className="h-12 border border-dashed border-hairline bg-transparent px-4 outline-none focus:border-solid"
+            id="expense-category"
+            className="flex h-10 w-full rounded-xl border border-[var(--hairline)] bg-[var(--surface)] px-3 text-sm text-[var(--foreground)]"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -455,17 +448,17 @@ export function ExpenseForm({
               </option>
             ))}
           </select>
-        </label>
+        </div>
       </div>
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+        <legend className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
           Paid by
         </legend>
         {payers.map((p, idx) => (
           <div key={`${p.userId}-${idx}`} className="flex gap-2">
             <select
-              className="h-11 flex-1 border border-dashed border-hairline bg-transparent px-3 outline-none"
+              className="h-11 flex-1 border border border-[var(--hairline)] bg-transparent px-3 outline-none"
               value={p.userId}
               onChange={(e) => {
                 const next = [...payers];
@@ -481,7 +474,7 @@ export function ExpenseForm({
             </select>
             {payers.length > 1 ? (
               <input
-                className="h-11 w-28 border border-dashed border-hairline bg-transparent px-2 font-mono outline-none"
+                className="h-11 w-28 border border border-[var(--hairline)] bg-transparent px-2 font-mono outline-none"
                 inputMode="decimal"
                 placeholder="0.00"
                 value={p.amount}
@@ -496,7 +489,7 @@ export function ExpenseForm({
         ))}
         <button
           type="button"
-          className="self-start font-mono text-[11px] tracking-[0.14em] uppercase text-muted hover:text-ink"
+          className="self-start font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground hover:text-foreground"
           onClick={() =>
             setPayers((prev) => [
               ...prev,
@@ -509,7 +502,7 @@ export function ExpenseForm({
       </fieldset>
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+        <legend className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
           Split method
         </legend>
         <div className="flex flex-wrap gap-2">
@@ -519,8 +512,8 @@ export function ExpenseForm({
               type="button"
               className={`h-10 px-3 font-mono text-[11px] tracking-[0.14em] uppercase border border-dashed ${
                 splitMethod === method
-                  ? "border-solid bg-panel text-panel-ink"
-                  : "border-hairline"
+                  ? "border-solid bg-[var(--surface-2)] text-[var(--accent-ink)]"
+                  : "border-[var(--hairline)]"
               }`}
               onClick={() => setSplitMethod(method)}
             >
@@ -531,10 +524,10 @@ export function ExpenseForm({
       </fieldset>
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+        <legend className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
           Participants
         </legend>
-        <ul className="divide-y divide-dashed divide-hairline border border-dashed border-hairline">
+        <ul className="divide-y divide-dashed divide-[var(--hairline)] border border border-[var(--hairline)]">
           {memberList.map((m) => (
             <li
               key={m.userId}
@@ -555,7 +548,7 @@ export function ExpenseForm({
               </label>
               {selected[m.userId] !== false && splitMethod === "unequal" ? (
                 <input
-                  className="h-9 w-24 border border-dashed border-hairline bg-transparent px-2 font-mono text-sm outline-none"
+                  className="h-9 w-24 border border border-[var(--hairline)] bg-transparent px-2 font-mono text-sm outline-none"
                   inputMode="decimal"
                   value={unequal[m.userId] ?? ""}
                   onChange={(e) =>
@@ -568,7 +561,7 @@ export function ExpenseForm({
               ) : null}
               {selected[m.userId] !== false && splitMethod === "percentage" ? (
                 <input
-                  className="h-9 w-20 border border-dashed border-hairline bg-transparent px-2 font-mono text-sm outline-none"
+                  className="h-9 w-20 border border border-[var(--hairline)] bg-transparent px-2 font-mono text-sm outline-none"
                   inputMode="decimal"
                   placeholder="%"
                   value={percentages[m.userId] ?? ""}
@@ -582,7 +575,7 @@ export function ExpenseForm({
               ) : null}
               {selected[m.userId] !== false && splitMethod === "shares" ? (
                 <input
-                  className="h-9 w-20 border border-dashed border-hairline bg-transparent px-2 font-mono text-sm outline-none"
+                  className="h-9 w-20 border border border-[var(--hairline)] bg-transparent px-2 font-mono text-sm outline-none"
                   inputMode="numeric"
                   placeholder="shares"
                   value={shares[m.userId] ?? "1"}
@@ -601,10 +594,10 @@ export function ExpenseForm({
 
       {preview.length > 0 && amountMinor != null ? (
         <div
-          className="border border-dashed border-hairline px-4 py-3"
+          className="border border border-[var(--hairline)] px-4 py-3"
           aria-live="polite"
         >
-          <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+          <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
             Split preview
           </p>
           <ul className="mt-2 space-y-1">
@@ -622,7 +615,7 @@ export function ExpenseForm({
       ) : null}
 
       <label className="flex flex-col gap-2">
-        <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">
+        <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
           Receipt photo
         </span>
         <input
@@ -634,14 +627,14 @@ export function ExpenseForm({
           }}
         />
         {uploading ? (
-          <span className="text-sm text-muted">Uploading…</span>
+          <span className="text-sm text-muted-foreground-foreground">Uploading…</span>
         ) : null}
         {receiptUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={receiptUrl}
             alt="Receipt"
-            className="mt-2 max-h-40 border border-dashed border-hairline object-contain"
+            className="mt-2 max-h-40 border border border-[var(--hairline)] object-contain"
           />
         ) : null}
       </label>
