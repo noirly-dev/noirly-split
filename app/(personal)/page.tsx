@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { Button, PageHeader } from "@noirly-dev/ui";
+import { Button, PageContainer, PageHeader } from "@noirly-dev/ui";
 import { DotMatrixNumeral } from "@/src/components/DotMatrix";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -14,7 +14,7 @@ export default function HomePage() {
   });
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-6 py-8">
+    <PageContainer size="lg">
       <PageHeader
         kicker="Personal"
         title="Groups"
@@ -99,6 +99,6 @@ export default function HomePage() {
           </ul>
         ) : null}
       </section>
-    </main>
+    </PageContainer>
   );
 }

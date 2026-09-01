@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Button, PageHeader } from "@noirly-dev/ui";
+import { Button, PageContainer, PageHeader } from "@noirly-dev/ui";
 import { MoneyText } from "@/src/components/MoneyText";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -30,7 +30,7 @@ export default function GroupExpensesPage() {
     "Member";
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-6 py-8">
+    <PageContainer size="md">
       <PageHeader
         kicker="Expenses"
         title={group.data?.group.name ?? "Group"}
@@ -102,6 +102,6 @@ export default function GroupExpensesPage() {
           })}
         </ul>
       ) : null}
-    </main>
+    </PageContainer>
   );
 }

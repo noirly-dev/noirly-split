@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { PageHeader } from "@noirly-dev/ui";
+import { PageContainer, PageHeader } from "@noirly-dev/ui";
 import { ExpenseForm } from "@/src/features/expenses/ExpenseForm";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -26,14 +26,14 @@ export default function EditExpensePage() {
 
   if (!group.data || !me.data || !expense.data) {
     return (
-      <main className="mx-auto w-full max-w-lg px-6 py-8">
+      <PageContainer size="sm">
         <p className="text-sm text-muted-foreground-foreground">Loading…</p>
-      </main>
+      </PageContainer>
     );
   }
 
   return (
-    <main className="mx-auto w-full max-w-lg px-6 py-8">
+    <PageContainer size="sm">
       <PageHeader
         kicker="Expense"
         title="Edit expense"
@@ -47,6 +47,6 @@ export default function EditExpensePage() {
           initial={expense.data.expense}
         />
       </div>
-    </main>
+    </PageContainer>
   );
 }

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, PageHeader } from "@noirly-dev/ui";
+import { Button, PageContainer, PageHeader } from "@noirly-dev/ui";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
 
@@ -48,7 +48,7 @@ export default function NewGroupPage() {
   });
 
   return (
-    <main className="mx-auto w-full max-w-lg px-6 py-8">
+    <PageContainer size="sm">
       <PageHeader
         kicker="Groups"
         title="New group"
@@ -130,6 +130,6 @@ export default function NewGroupPage() {
           {mutation.isPending ? "Creating…" : "Create group"}
         </Button>
       </form>
-    </main>
+    </PageContainer>
   );
 }

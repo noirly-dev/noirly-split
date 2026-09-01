@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, PageHeader } from "@noirly-dev/ui";
+import { Button, PageContainer, PageHeader } from "@noirly-dev/ui";
 import { MoneyText } from "@/src/components/MoneyText";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
@@ -49,19 +49,19 @@ export default function ExpenseDetailPage() {
 
   if (expense.isLoading) {
     return (
-      <main className="mx-auto w-full max-w-3xl px-6 py-8">
+      <PageContainer size="md">
         <p className="text-sm text-muted-foreground-foreground">Loading…</p>
-      </main>
+      </PageContainer>
     );
   }
 
   if (expense.error || !expense.data) {
     return (
-      <main className="mx-auto w-full max-w-3xl px-6 py-8">
+      <PageContainer size="md">
         <p className="text-sm text-balance-negative" role="alert">
           {(expense.error as Error)?.message ?? "Not found"}
         </p>
-      </main>
+      </PageContainer>
     );
   }
 
@@ -70,7 +70,7 @@ export default function ExpenseDetailPage() {
   const canEdit = me.data?.user.id === e.createdBy;
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-6 py-8">
+    <PageContainer size="md">
       <Link
         href={`/g/${groupId}`}
         className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground hover:text-foreground"
@@ -159,6 +159,6 @@ export default function ExpenseDetailPage() {
           {(del.error as Error).message}
         </p>
       ) : null}
-    </main>
+    </PageContainer>
   );
 }

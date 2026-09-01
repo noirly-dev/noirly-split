@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { AppShell as NoirlyAppShell, type AppNavItem } from "@noirly-dev/ui";
+import { AppShell as NoirlyAppShell, SidebarBrand, type AppNavItem } from "@noirly-dev/ui";
 import { SignOutButton } from "@/src/features/auth/SignOutButton";
 import { CommandPalette } from "@/src/features/command-palette/CommandPalette";
 import { useUIStore } from "@/src/stores/ui-store";
@@ -55,25 +55,25 @@ export function AppShell({ children }: Props) {
       <NoirlyAppShell
         sidebar={{
           brand: (
-            <div>
-              <Link href="/" className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--hairline)] bg-[var(--surface-2)] font-mono text-xs font-bold tracking-[0.12em] text-[var(--accent)]">
-                  NS
-                </span>
-                <div>
-                  <p className="font-display text-sm font-semibold tracking-tight">Noirly Split</p>
-                  <p className="text-xs text-[var(--muted-foreground)]">Shared expenses</p>
-                </div>
-              </Link>
-              <button
-                type="button"
-                onClick={() => useUIStore.getState().setCommandPaletteOpen(true)}
-                className="mt-3 flex w-full items-center justify-between rounded-xl border border-[var(--hairline)] bg-[var(--surface-2)] px-3 py-2 text-left text-sm text-[var(--muted-foreground)] transition-colors hover:bg-[var(--surface)] hover:text-[var(--foreground)]"
-              >
-                <span>Search</span>
-                <span className="font-mono text-[10px]">⌘K</span>
-              </button>
-            </div>
+            <Link href="/">
+              <SidebarBrand
+                logo={
+                  <span className="font-mono text-xs font-bold tracking-[0.12em]">NS</span>
+                }
+                title="Noirly Split"
+                subtitle="Shared expenses"
+              />
+            </Link>
+          ),
+          children: (
+            <button
+              type="button"
+              onClick={() => useUIStore.getState().setCommandPaletteOpen(true)}
+              className="flex w-full items-center justify-between rounded-xl border border-[var(--hairline)] bg-[var(--surface-2)] px-3 py-2 text-left text-sm text-[var(--muted-foreground)] transition-colors hover:bg-[var(--surface)] hover:text-[var(--foreground)]"
+            >
+              <span>Search</span>
+              <span className="font-mono text-[10px]">⌘K</span>
+            </button>
           ),
           items: navItems,
           footer: (

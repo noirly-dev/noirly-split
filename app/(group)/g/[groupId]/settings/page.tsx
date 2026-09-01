@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Button, PageHeader } from "@noirly-dev/ui";
+import { Button, PageContainer, PageHeader } from "@noirly-dev/ui";
 import { qk } from "@/src/core/sync/query-keys";
 import { api } from "@/src/lib/api-client";
 
@@ -100,7 +100,7 @@ export default function GroupSettingsPage() {
   const canLeave = !(isCreator && (members.data?.members.length ?? 0) > 1);
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-6 py-8">
+    <PageContainer size="md">
       <PageHeader
         kicker="Group"
         title="Settings"
@@ -313,6 +313,6 @@ export default function GroupSettingsPage() {
           ← Back to expenses
         </Link>
       </p>
-    </main>
+    </PageContainer>
   );
 }
