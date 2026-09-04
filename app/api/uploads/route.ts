@@ -7,6 +7,7 @@ import {
   jsonOk,
   requireSplitSession,
 } from "@/src/server/api/http";
+import { canWriteToR2, uploadBuffer } from "@/src/server/storage/r2";
 
 const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -26,6 +27,7 @@ export async function POST(request: Request) {
       throw new ApiError(400, "invalid_request", "File must be under 5MB");
     }
 
+    const buffer = Buffer.from(await file.arrayBuffer());
     const ext =
       file.type === "image/png"
         ? "png"
@@ -35,9 +37,19 @@ export async function POST(request: Request) {
             ? "gif"
             : "jpg";
     const name = `${Date.now()}-${randomBytes(6).toString("hex")}.${ext}`;
+
+    if (canWriteToR2()) {
+      const uploaded = await uploadBuffer(
+        buffer,
+        name,
+        file.type,
+        "split/receipts",
+      );
+      return jsonOk({ url: uploaded.publicUrl, key: uploaded.key }, 201);
+    }
+
     const dir = path.join(process.cwd(), "public", "uploads");
     await mkdir(dir, { recursive: true });
-    const buffer = Buffer.from(await file.arrayBuffer());
     await writeFile(path.join(dir, name), buffer);
 
     const origin = new URL(request.url).origin;
