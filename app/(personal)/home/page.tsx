@@ -26,7 +26,7 @@ export default function HomePage() {
         }
       />
 
-      <div className="mt-8 border border border-[var(--hairline)] bg-[var(--surface)] p-5 sm:max-w-xs">
+      <div className="mt-8 border border-[var(--hairline)] bg-[var(--surface)] p-5 sm:max-w-xs">
         <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground-foreground">
           Groups
         </p>
@@ -58,7 +58,7 @@ export default function HomePage() {
         ) : null}
 
         {data && data.groups.length === 0 ? (
-          <div className="mt-4 border border border-[var(--hairline)] px-6 py-10">
+          <div className="mt-4 border border-[var(--hairline)] px-6 py-10">
             <p className="font-display text-2xl font-bold uppercase tracking-[-0.03em]">
               No groups yet
             </p>
@@ -77,7 +77,7 @@ export default function HomePage() {
               <li key={group.id}>
                 <Link
                   href={`/g/${group.id}`}
-                  className="block border border border-[var(--hairline)] bg-[var(--surface)] p-4 transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--foreground)]"
+                  className="block border border-[var(--hairline)] bg-[var(--surface)] p-4 transition-colors hover:bg-[var(--surface-2)] hover:text-[var(--foreground)]"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>

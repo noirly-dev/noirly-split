@@ -36,7 +36,7 @@ export function CommandPalette() {
 
   const items = useMemo(() => {
     const list: Item[] = [
-      { id: "dash", label: "Groups", href: "/", group: "Navigate" },
+      { id: "dash", label: "Groups", href: "/home", group: "Navigate" },
       {
         id: "new-group",
         label: "New group",

@@ -2,14 +2,13 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import { Button } from "@noirly-dev/ui";
 import { SplitBusyScreen } from "@/src/components/SplitBusyScreen";
 
 const AUTH_MESSAGE = "noirly-auth";
 const AUTH_STORAGE_KEY = "noirly-auth";
 
 function safeNext(value: string): string {
-  return value.startsWith("/") && !value.startsWith("//") ? value : "/";
+  return value.startsWith("/") && !value.startsWith("//") ? value : "/home";
 }
 
 function readAuthPayload(): { next?: string } | null {
@@ -40,7 +39,11 @@ function subscribeNoop() {
   return () => {};
 }
 
-export function NoirlyLoginButton({ redirectTo = "/" }: { redirectTo?: string }) {
+export function NoirlyLoginButton({
+  redirectTo = "/home",
+}: {
+  redirectTo?: string;
+}) {
   const target = safeNext(redirectTo);
   const [error, setError] = useState<string | null>(null);
   const [waiting, setWaiting] = useState(false);
@@ -145,9 +148,9 @@ export function NoirlyLoginButton({ redirectTo = "/" }: { redirectTo?: string })
             document.body,
           )
         : null}
-      <Button
+      <button
+        className="flex h-12 w-full cursor-pointer items-center justify-center bg-[var(--accent-ink)] px-5 font-mono text-[11px] font-semibold tracking-[0.16em] text-[var(--accent)] uppercase transition-colors hover:bg-transparent hover:text-[var(--accent-ink)] hover:outline hover:outline-1 hover:outline-dashed hover:outline-[var(--accent-ink)] disabled:cursor-not-allowed disabled:opacity-50"
         type="button"
-        className="h-12 w-full font-mono text-[11px] uppercase tracking-[0.16em]"
         onClick={openIdentityPopup}
         disabled={waiting}
       >
@@ -156,7 +159,7 @@ export function NoirlyLoginButton({ redirectTo = "/" }: { redirectTo?: string })
           : waiting
             ? "Waiting for Identity…"
             : "Noirly Login"}
-      </Button>
+      </button>
       {error ? (
         <p className="font-mono text-[11px] tracking-[0.08em] text-[var(--accent-ink)]/70">
           {error}

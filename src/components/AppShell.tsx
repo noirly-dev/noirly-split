@@ -43,7 +43,7 @@ export function AppShell({ children }: Props) {
     }
 
     items.push(
-      { href: "/", label: "Groups", match: "exact" },
+      { href: "/home", label: "Groups", match: "exact" },
       { href: "/groups/new", label: "New group", match: "prefix" },
     );
 
@@ -55,7 +55,7 @@ export function AppShell({ children }: Props) {
       <NoirlyAppShell
         sidebar={{
           brand: (
-            <Link href="/">
+            <Link href="/home">
               <SidebarBrand
                 logo={
                   <span className="font-mono text-xs font-bold tracking-[0.12em]">NS</span>

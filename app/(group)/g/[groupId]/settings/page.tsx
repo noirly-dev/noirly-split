@@ -71,14 +71,14 @@ export default function GroupSettingsPage() {
 
   const leave = useMutation({
     mutationFn: () => api.leaveGroup(groupId),
-    onSuccess: () => router.push("/"),
+    onSuccess: () => router.push("/home"),
   });
 
   const archive = useMutation({
     mutationFn: () => api.archiveGroup(groupId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: qk.groups });
-      router.push("/");
+      router.push("/home");
     },
   });
 
@@ -86,7 +86,7 @@ export default function GroupSettingsPage() {
     mutationFn: () => api.deleteGroup(groupId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: qk.groups });
-      router.push("/");
+      router.push("/home");
     },
   });
 

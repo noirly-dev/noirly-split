@@ -5,33 +5,35 @@ import type { NextRequest } from "next/server";
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // API enforces its own auth via requireSplitSession
   if (pathname.startsWith("/api/")) {
     return NextResponse.next();
   }
 
-  if (
-    pathname.startsWith("/login") ||
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/favicon")
-  ) {
-    return NextResponse.next();
-  }
-
-  // Invite landing is viewable logged out; accept requires sign-in in the page
-  if (pathname.startsWith("/invites/")) {
-    return NextResponse.next();
-  }
+  const isLanding = pathname === "/";
+  const isLogin = pathname === "/login";
+  const isLoginPopup =
+    pathname === "/login/popup" || pathname === "/login/popup-complete";
+  const isInvite = pathname.startsWith("/invites/");
+  const isPublic = isLanding || isLogin || isLoginPopup || isInvite;
 
   const session = await auth();
-  if (!session?.user?.id) {
+
+  if (!session?.user?.id && !isPublic) {
     const login = new URL("/login", request.url);
     login.searchParams.set("next", pathname);
     return NextResponse.redirect(login);
   }
 
-  if (pathname.startsWith("/login")) {
-    return NextResponse.redirect(new URL("/", request.url));
+  if (session?.user?.id && isLogin) {
+    const next = request.nextUrl.searchParams.get("next");
+    if (next && next.startsWith("/") && !next.startsWith("//")) {
+      return NextResponse.redirect(new URL(next, request.url));
+    }
+    return NextResponse.redirect(new URL("/home", request.url));
+  }
+
+  if (session?.user?.id && isLanding) {
+    return NextResponse.redirect(new URL("/home", request.url));
   }
 
   return NextResponse.next();
