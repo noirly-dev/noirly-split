@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { NoirlyHead, noirlyFontClassName } from "@noirly-dev/ui";
+import { NoirlyExperience } from "@noirly-dev/ui/experience";
 import { AppProviders } from "@/src/components/AppProviders";
 import "./globals.css";
 
@@ -20,7 +21,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <NoirlyHead themeId="gold" />
       </head>
       <body className={`${noirlyFontClassName} flex min-h-full flex-col antialiased`}>
-        <AppProviders>{children}</AppProviders>
+        <NoirlyExperience mark="Noirly Split">
+          <AppProviders>{children}</AppProviders>
+        </NoirlyExperience>
       </body>
     </html>
   );
