@@ -2,14 +2,24 @@ import type { Metadata } from "next";
 import { NoirlyHead, noirlyFontClassName } from "@noirly-dev/ui";
 import { NoirlyExperience } from "@noirly-dev/ui/experience";
 import { AppProviders } from "@/src/components/AppProviders";
-import { SPLIT_LOGO_URL } from "@/src/lib/brand";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Noirly Split",
   description: "Split shared costs with friends, roommates, and trip parties",
   icons: {
-    icon: [{ url: SPLIT_LOGO_URL, type: "image/svg+xml" }],
+    icon: [
+      {
+        url: "/brand-mark-light.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/brand-mark-dark.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
   },
 };
 
