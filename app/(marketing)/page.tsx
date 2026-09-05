@@ -1,11 +1,10 @@
-import Image from "next/image";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { Card, CardContent, CardHeader, CardTitle } from "@noirly-dev/ui";
 import { auth } from "@/auth";
-import { DotMatrixNumeral } from "@/src/components/DotMatrix";
+import { BrandMark } from "@/src/components/BrandMark";
+import { MarketingHeader } from "@/src/components/MarketingHeader";
 import { NoirlyLoginButton } from "@/src/features/auth/NoirlyLoginButton";
-import { ensureSplitAccount } from "@/src/server/auth/bootstrap";
 
 export const metadata: Metadata = {
   title: "Noirly Split",
@@ -15,32 +14,26 @@ export const metadata: Metadata = {
 
 const features = [
   {
-    index: "01",
     title: "Groups",
     copy: "Trips, roommates, and friend circles in one place.",
   },
   {
-    index: "02",
     title: "Splits",
     copy: "Equal, unequal, percent, or shares — with receipts.",
   },
   {
-    index: "03",
     title: "Balances",
     copy: "Who owes whom, simplified to the fewest payments.",
   },
   {
-    index: "04",
     title: "Settlements",
     copy: "Record paybacks and settle up when you’re ready.",
   },
   {
-    index: "05",
-    title: "Identity",
-    copy: "Sign in once with Noirly Identity — email or Google.",
+    title: "Noirly Identity",
+    copy: "Sign in once with email or Google. No new password to remember.",
   },
   {
-    index: "06",
     title: "Realtime",
     copy: "Expenses and balances update as they happen.",
   },
@@ -49,168 +42,66 @@ const features = [
 export default async function LandingPage() {
   const session = await auth();
   if (session?.user?.id) {
-    await ensureSplitAccount({
-      id: session.user.id,
-      email: session.user.email,
-      name: session.user.name,
-      image: session.user.image,
-    });
+    // Middleware also redirects signed-in `/` → `/home`; this is the RSC fallback.
     redirect("/home");
   }
 
   return (
-    <div className="flex min-h-full flex-1 flex-col">
-      <header className="flex items-center justify-between gap-6 border-b border-[var(--hairline)] px-5 py-5 md:px-10">
-        <div className="flex items-center gap-3">
-          <Image
-            src="/logo-light.png"
-            alt=""
-            width={48}
-            height={48}
-            className="h-11 w-11 border border-[var(--hairline)] dark:hidden md:h-12 md:w-12"
-            priority
-          />
-          <Image
-            src="/logo-dark.png"
-            alt=""
-            width={48}
-            height={48}
-            className="hidden h-11 w-11 border border-[var(--hairline)] dark:block md:h-12 md:w-12"
-            priority
-          />
-          <p className="font-display text-lg font-bold tracking-[-0.04em] uppercase md:text-2xl">
-            Noirly Split
-          </p>
-        </div>
-        <Link
-          href="/login"
-          className="font-mono text-[11px] font-semibold tracking-[0.16em] uppercase transition-colors hover:bg-[var(--accent)] hover:text-[var(--accent-ink)]"
-        >
-          Sign in
-        </Link>
-      </header>
+    <div className="flex min-h-dvh flex-1 flex-col">
+      <MarketingHeader />
 
-      <div className="flex flex-1 flex-col lg:flex-row">
-        <div className="pointer-events-none hidden w-10 shrink-0 items-center justify-center border-r border-[var(--hairline)] lg:flex">
-          <span className="font-mono text-[10px] font-medium tracking-[0.28em] uppercase [writing-mode:vertical-rl] rotate-180">
-            split.noirly.com
-          </span>
-        </div>
-
-        <div className="flex min-w-0 flex-1 flex-col">
-          <section className="relative overflow-hidden px-5 py-12 md:px-12 md:py-20">
-            <div className="mb-8 flex items-center gap-5">
-              <Image
-                src="/logo-light.png"
-                alt=""
-                width={96}
-                height={96}
-                className="h-20 w-20 border border-[var(--hairline)] dark:hidden md:h-24 md:w-24"
-                priority
-              />
-              <Image
-                src="/logo-dark.png"
-                alt=""
-                width={96}
-                height={96}
-                className="hidden h-20 w-20 border border-[var(--hairline)] dark:block md:h-24 md:w-24"
-                priority
-              />
-              <div>
-                <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--muted-foreground)]">
-                  Splitting 1.0
-                </p>
-                <p className="mt-2 font-mono text-[10px] tracking-[0.14em] uppercase text-[var(--muted-foreground)]">
-                  Split. Settle. Done.
-                </p>
-              </div>
-            </div>
-            <h1 className="text-perforated mt-4 max-w-[10ch] font-display text-[18vw] leading-[0.8] font-bold tracking-[-0.07em] uppercase md:text-[9rem]">
-              Split
+      <main id="main" className="flex flex-1 flex-col">
+        <section className="shell section-y">
+          <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+            <BrandMark className="h-20 w-20" />
+            <p className="eyebrow mt-7">Shared expenses</p>
+            <h1 className="display-lg mt-4 text-balance">
+              Split costs. Settle up. Done.
             </h1>
-            <DotMatrixNumeral className="mt-6 block text-5xl md:text-7xl">
-              1.0
-            </DotMatrixNumeral>
-          </section>
+            <p className="lede mt-5 text-center">
+              Groups, splits, and simplified balances for friends, roommates, and
+              trips — signed in through Noirly Identity.
+            </p>
 
-          <section className="bg-[var(--accent)] px-5 py-10 text-[var(--accent-ink)] md:px-12 md:py-14">
-            <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-[var(--accent-ink)]/50">
-              Shared expenses
-            </p>
-            <p className="mt-4 max-w-2xl font-display text-2xl leading-snug font-medium tracking-[-0.03em] md:text-4xl">
-              Groups, splits, and simplified balances for friends, roommates,
-              and trips — signed in through Noirly Identity.
-            </p>
-            <div className="mt-8 flex max-w-sm flex-col gap-3">
+            <div className="mt-9 w-full max-w-xs">
               <NoirlyLoginButton redirectTo="/home" />
-              <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-[var(--accent-ink)]/50">
-                Opens Identity in a secure popup
-              </p>
             </div>
-          </section>
+            <p className="meta mt-4">Opens Noirly Identity in a secure popup</p>
+          </div>
+        </section>
 
-          <section className="relative border-t border-[var(--hairline)]">
-            <div className="relative min-h-[200px] w-full bg-[var(--surface)] md:min-h-[280px]">
-              <Image
-                src="/feature-light.png"
-                alt="Noirly Split"
-                fill
-                className="object-contain p-8 dark:hidden md:p-12"
-                sizes="100vw"
-                priority
-              />
-              <Image
-                src="/feature-dark.png"
-                alt="Noirly Split"
-                fill
-                className="hidden object-contain p-8 dark:block md:p-12"
-                sizes="100vw"
-                priority
-              />
+        <section className="section-rule relative">
+          <div className="shell section-y">
+            <div className="mx-auto max-w-2xl text-center">
+              <p className="eyebrow justify-center">What is inside</p>
+              <h2 className="display-md mt-4">Built for how groups actually spend</h2>
             </div>
-          </section>
 
-          <section className="grid gap-0 border-t border-[var(--hairline)] md:grid-cols-2 xl:grid-cols-3">
-            {features.map((item) => (
-              <div
-                key={item.index}
-                className="flex min-h-44 flex-col justify-between gap-6 border-b border-r border-[var(--hairline)] px-5 py-8 md:px-8"
-              >
-                <DotMatrixNumeral className="text-3xl">{item.index}</DotMatrixNumeral>
-                <div>
-                  <h2 className="font-display text-xl font-semibold tracking-[-0.03em]">
-                    {item.title}
-                  </h2>
-                  <p className="mt-1 font-mono text-[11px] tracking-[0.08em] uppercase opacity-60">
-                    {item.copy}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </section>
+            <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {features.map((item) => (
+                <Card key={item.title} variant="interactive">
+                  <CardHeader>
+                    <CardTitle>{item.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="copy">{item.copy}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
 
-          <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--hairline)] px-5 py-6 font-mono text-[10px] tracking-[0.16em] uppercase text-[var(--muted-foreground)] md:px-12">
-            <span className="flex items-center gap-3">
-              <Image
-                src="/logo-light.png"
-                alt=""
-                width={28}
-                height={28}
-                className="h-7 w-7 dark:hidden"
-              />
-              <Image
-                src="/logo-dark.png"
-                alt=""
-                width={28}
-                height={28}
-                className="hidden h-7 w-7 dark:block"
-              />
-              Noirly Split
-            </span>
-            <span>Groups / Splits / Settlements</span>
-          </footer>
+      <footer className="section-rule relative">
+        <div className="shell flex flex-wrap items-center justify-between gap-4 py-7">
+          <span className="flex items-center gap-2.5">
+            <BrandMark className="h-6 w-6" />
+            <span className="meta">Noirly Split</span>
+          </span>
+          <span className="meta">Groups · Splits · Settlements</span>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }

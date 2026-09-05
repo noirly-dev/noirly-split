@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { useMemo, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell as NoirlyAppShell, SidebarBrand, type AppNavItem } from "@noirly-dev/ui";
+import { BrandMark } from "@/src/components/BrandMark";
+import { ThemeControls } from "@/src/components/ThemeControls";
 import { SignOutButton } from "@/src/features/auth/SignOutButton";
 import { CommandPalette } from "@/src/features/command-palette/CommandPalette";
 import { useUIStore } from "@/src/stores/ui-store";
@@ -57,9 +59,7 @@ export function AppShell({ children }: Props) {
           brand: (
             <Link href="/home">
               <SidebarBrand
-                logo={
-                  <span className="font-mono text-xs font-bold tracking-[0.12em]">NS</span>
-                }
+                logo={<BrandMark className="h-8 w-8" />}
                 title="Noirly Split"
                 subtitle="Shared expenses"
               />
@@ -92,9 +92,24 @@ export function AppShell({ children }: Props) {
         }}
         header={{
           brand: (
-            <p className="font-display truncate text-sm font-semibold tracking-tight">
-              {activeGroup?.name ?? "Noirly Split"}
-            </p>
+            <div className="flex items-center gap-2.5">
+              <BrandMark className="h-7 w-7" />
+              <p className="font-display truncate text-sm font-semibold tracking-tight">
+                {activeGroup?.name ?? "Noirly Split"}
+              </p>
+            </div>
+          ),
+          actions: (
+            <>
+              <ThemeControls size="sm" />
+              <button
+                type="button"
+                onClick={() => useUIStore.getState().setCommandPaletteOpen(true)}
+                className="cursor-pointer rounded-lg border border-[var(--hairline)] px-3 py-1.5 font-mono text-sm text-[var(--muted-foreground)]"
+              >
+                ⌘K
+              </button>
+            </>
           ),
         }}
       >

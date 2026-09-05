@@ -17,7 +17,23 @@ export type BootstrappedUser = {
   preferredCurrency: string;
 };
 
-/** Upsert Split user from Identity session. */
+function toBootstrapped(user: SplitUserDocument): BootstrappedUser {
+  return {
+    id: user._id.toString(),
+    identitySub: user.identitySub,
+    email: user.email,
+    displayName: user.displayName,
+    avatarUrl: user.avatarUrl ?? null,
+    preferredCurrency: user.preferredCurrency,
+  };
+}
+
+/**
+ * Resolve the Split user for an Identity session.
+ *
+ * Hot path is read-only. Writes only when the account is missing or profile
+ * fields changed.
+ */
 export async function ensureSplitAccount(
   sessionUser: BootstrapSessionUser,
 ): Promise<BootstrappedUser> {
@@ -31,35 +47,52 @@ export async function ensureSplitAccount(
       `${sessionUser.id}@users.local`;
     const displayName =
       sessionUser.name?.trim() || email.split("@")[0] || "Noirly user";
+    const avatarUrl = sessionUser.image ?? null;
+    const emailVerified = Boolean(sessionUser.email);
 
-    const user = (await SplitUser.findOneAndUpdate(
+    const existing = (await SplitUser.findOne({
+      identitySub: sessionUser.id,
+    })) as SplitUserDocument | null;
+
+    if (!existing) {
+      const created = (await SplitUser.create({
+        identitySub: sessionUser.id,
+        email,
+        displayName,
+        avatarUrl,
+        emailVerified,
+        preferredCurrency: "USD",
+      })) as SplitUserDocument;
+      return toBootstrapped(created);
+    }
+
+    const needsUpdate =
+      existing.email !== email ||
+      existing.displayName !== displayName ||
+      (existing.avatarUrl ?? null) !== avatarUrl ||
+      existing.emailVerified !== emailVerified;
+
+    if (!needsUpdate) {
+      return toBootstrapped(existing);
+    }
+
+    const updated = (await SplitUser.findOneAndUpdate(
       { identitySub: sessionUser.id },
       {
         $set: {
           email,
           displayName,
-          avatarUrl: sessionUser.image ?? null,
-          emailVerified: Boolean(sessionUser.email),
-        },
-        $setOnInsert: {
-          identitySub: sessionUser.id,
-          preferredCurrency: "USD",
+          avatarUrl,
+          emailVerified,
         },
       },
-      { upsert: true, returnDocument: "after" },
+      { returnDocument: "after" },
     )) as SplitUserDocument | null;
 
-    if (!user) {
-      throw new Error("Failed to upsert Split user");
+    if (!updated) {
+      throw new Error("Failed to update Split user");
     }
 
-    return {
-      id: user._id.toString(),
-      identitySub: user.identitySub,
-      email: user.email,
-      displayName: user.displayName,
-      avatarUrl: user.avatarUrl ?? null,
-      preferredCurrency: user.preferredCurrency,
-    };
+    return toBootstrapped(updated);
   });
 }
