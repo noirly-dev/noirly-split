@@ -59,7 +59,7 @@ export function AppShell({ children }: Props) {
           brand: (
             <Link href="/home">
               <SidebarBrand
-                logo={<BrandMark className="h-8 w-8" />}
+                logo={<BrandMark className="size-full" />}
                 title="Noirly Split"
                 subtitle="Shared expenses"
               />
